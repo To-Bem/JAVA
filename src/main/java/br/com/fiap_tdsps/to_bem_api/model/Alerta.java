@@ -1,0 +1,30 @@
+package br.com.fiap_tdsps.to_bem_api.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+public class Alerta {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String tipo;
+    private AlertaNivel nivel;
+    private AlertaStatus status;
+    private Integer nivelEscalonamento;
+    private LocalDateTime criadoEm;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Idoso idoso;
+}
