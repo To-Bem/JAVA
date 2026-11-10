@@ -16,4 +16,6 @@ public interface DispositivoRepository extends JpaRepository<Dispositivo, Long> 
     Page<Dispositivo> findByComodo(String comodo, Pageable pageable);
 
     Page<Dispositivo> findByStatus(DispositivoStatus status, Pageable pageable);
+
+    Long id(Long id);
 }
