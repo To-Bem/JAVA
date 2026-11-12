@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class DispositivoServiceImpl implements DispositivoService{
 
@@ -62,5 +64,10 @@ public class DispositivoServiceImpl implements DispositivoService{
     @Override
     public Page<Dispositivo> findByStatus(DispositivoStatus status, Integer page, Integer size) {
         return repository.findByStatus(status,Pageable.ofSize(size).withPage(page));
+    }
+
+    @Override
+    public Dispositivo findWithEventosById(Long id) {
+        return repository.findWithEventosById(id).orElseThrow(/* () -> erro */);
     }
 }

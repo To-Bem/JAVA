@@ -23,6 +23,7 @@ public class Dispositivo {
     private LocalDateTime ultimoHeartbeat;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idoso_id")
     private Idoso idoso;
 
     @OneToMany(mappedBy = "dispositivo",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)

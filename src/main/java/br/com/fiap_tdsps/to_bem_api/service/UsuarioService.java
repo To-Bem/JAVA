@@ -17,4 +17,10 @@ public interface UsuarioService {
     Usuario findById(Long id);
 
     Page<Usuario> findByPapel(UsuarioPapel papel, Integer page, Integer size);
+
+    Usuario findWithAlertasById(Long id);
+
+    Usuario findWithContatosById(Long id);
+
+    Usuario findWithAllById(Long id);
 }

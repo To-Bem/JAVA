@@ -21,5 +21,6 @@ public class Evento {
     private LocalDateTime dataHora;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dispositivo_id")
     private Dispositivo dispositivo;
 }

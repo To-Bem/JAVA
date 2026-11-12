@@ -18,8 +18,10 @@ public class Contato {
     private Integer ordemEscalonamento;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idoso_id")
     private Idoso idoso;
 }

@@ -47,4 +47,19 @@ public class UsuarioServiceImpl implements UsuarioService{
     public Page<Usuario> findByPapel(UsuarioPapel papel, Integer page, Integer size) {
         return repository.findByPapel(papel, Pageable.ofSize(size).withPage(page));
     }
+
+    @Override
+    public Usuario findWithAlertasById(Long id) {
+        return repository.findWithAlertasById(id).orElseThrow(/* () -> erro */);
+    }
+
+    @Override
+    public Usuario findWithContatosById(Long id) {
+        return repository.findWithContatosById(id).orElseThrow(/* () -> erro */);
+    }
+
+    @Override
+    public Usuario findWithAllById(Long id) {
+        return repository.findWithAllById(id).orElseThrow(/* () -> erro */);
+    }
 }

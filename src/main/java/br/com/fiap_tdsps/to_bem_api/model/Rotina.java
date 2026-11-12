@@ -21,5 +21,6 @@ public class Rotina {
     private Integer mediaLevantadasPorNoite;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idoso_id")
     private Idoso idoso;
 }

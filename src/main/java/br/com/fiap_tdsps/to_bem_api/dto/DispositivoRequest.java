@@ -1,0 +1,14 @@
+package br.com.fiap_tdsps.to_bem_api.dto;
+
+import br.com.fiap_tdsps.to_bem_api.model.DispositivoStatus;
+import br.com.fiap_tdsps.to_bem_api.model.DispositivoTipo;
+
+import java.time.LocalDateTime;
+
+public record DispositivoRequest(
+        DispositivoTipo tipo,
+        String comodo,
+        DispositivoStatus status,
+        LocalDateTime ultimoHeartbeat
+) {
+}

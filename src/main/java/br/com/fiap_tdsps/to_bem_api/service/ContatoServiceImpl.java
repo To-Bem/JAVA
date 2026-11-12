@@ -1,6 +1,7 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
 import br.com.fiap_tdsps.to_bem_api.model.Contato;
+import br.com.fiap_tdsps.to_bem_api.model.Dispositivo;
 import br.com.fiap_tdsps.to_bem_api.repository.ContatoRepository;
 import org.springframework.boot.data.metrics.DefaultRepositoryTagsProvider;
 import org.springframework.data.domain.Page;
@@ -11,12 +12,9 @@ import org.springframework.stereotype.Service;
 public class ContatoServiceImpl implements ContatoService{
 
     private final ContatoRepository repository;
-    private final DefaultRepositoryTagsProvider repositoryTagsProvider;
 
-
-    public ContatoServiceImpl(ContatoRepository repository, DefaultRepositoryTagsProvider repositoryTagsProvider){
+    public ContatoServiceImpl(ContatoRepository repository){
         this.repository = repository;
-        this.repositoryTagsProvider = repositoryTagsProvider;
     }
 
 
