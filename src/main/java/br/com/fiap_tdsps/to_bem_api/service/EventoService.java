@@ -17,5 +17,5 @@ public interface EventoService {
 
     Page<Evento> findByDispositivoId(Long dispositivoId, Integer page, Integer size);
 
-    Page<Evento> findByTipo(String tipo,Integer page, Integer size);
+    Page<Evento> findByTipoAndDispositivoId(String tipo, Long dispositivoId, Integer page, Integer size);
 }

@@ -19,7 +19,9 @@ public interface AlertaService {
 
     Page<Alerta> findByIdosoId(Long idosoId, Integer page, Integer size);
 
-    Page<Alerta> findByStatus(AlertaStatus status, Integer page, Integer size);
+    Page<Alerta> findByStatusAndOtherId(AlertaStatus status, Long idosoId, Long usuarioId, Integer page, Integer size);
 
-    Page<Alerta> findByNivel(AlertaNivel nivel, Integer page, Integer size);
+    Page<Alerta> findByNivelAndOtherId(AlertaNivel nivel,Long idosoId, Long usuarioId, Integer page, Integer size);
+
+    Page<Alerta> findByUsuarioId(Long usuarioId, Integer page, Integer size);
 }

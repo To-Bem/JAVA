@@ -18,48 +18,47 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     public Usuario save(Usuario usuario) {
-        return repository.save(usuario);
+        return this.repository.save(usuario);
     }
 
     @Override
     public void delete(Long id) {
-        repository.delete(findById(id));
+        this.repository.delete(findById(id));
     }
 
     @Override
     public Usuario update(Long id, Usuario update) {
-        findById(id);
         update.setId(id);
-        return repository.save(update);
+        return this.repository.save(update);
     }
 
     @Override
     public Page<Usuario> findAll(Integer page, Integer size) {
-        return repository.findAll(Pageable.ofSize(size).withPage(page));
+        return this.repository.findAll(Pageable.ofSize(size).withPage(page));
     }
 
     @Override
     public Usuario findById(Long id) {
-        return repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Page<Usuario> findByPapel(UsuarioPapel papel, Integer page, Integer size) {
-        return repository.findByPapel(papel, Pageable.ofSize(size).withPage(page));
+        return this.repository.findByPapel(papel, Pageable.ofSize(size).withPage(page));
     }
 
     @Override
     public Usuario findWithAlertasById(Long id) {
-        return repository.findWithAlertasById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithAlertasById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Usuario findWithContatosById(Long id) {
-        return repository.findWithContatosById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithContatosById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Usuario findWithAllById(Long id) {
-        return repository.findWithAllById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithAllById(id).orElseThrow(/* () -> erro */);
     }
 }

@@ -21,53 +21,52 @@ public class DispositivoServiceImpl implements DispositivoService{
 
     @Override
     public Dispositivo save(Dispositivo dispositivo) {
-        return repository.save(dispositivo);
+        return this.repository.save(dispositivo);
     }
 
     @Override
     public void delete(Long id) {
-        repository.delete(findById(id));
+        this.repository.delete(findById(id));
     }
 
     @Override
     public Dispositivo update(Long id, Dispositivo update) {
-        findById(id);
         update.setId(id);
-        return repository.save(update);
+        return this.repository.save(update);
     }
 
     @Override
     public Page<Dispositivo> findAll(Integer page, Integer size) {
-        return repository.findAll(Pageable.ofSize(size).withPage(page));
+        return this.repository.findAll(Pageable.ofSize(size).withPage(page));
     }
 
     @Override
     public Dispositivo findById(Long id) {
-        return repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Page<Dispositivo> findByIdosoId(Long idosoId, Integer page, Integer size) {
-        return repository.findByIdosoId(idosoId, Pageable.ofSize(size).withPage(page));
+        return this.repository.findByIdosoId(idosoId, Pageable.ofSize(size).withPage(page));
     }
 
     @Override
-    public Page<Dispositivo> findByTipo(DispositivoTipo tipo, Integer page, Integer size) {
-        return repository.findByTipo(tipo,Pageable.ofSize(size).withPage(page));
+    public Page<Dispositivo> findByTipoAndIdosoId(DispositivoTipo tipo,Long idosoId, Integer page, Integer size) {
+        return this.repository.findByTipoAndIdosoId(tipo, idosoId,Pageable.ofSize(size).withPage(page));
     }
 
     @Override
-    public Page<Dispositivo> findByComodo(String comodo, Integer page, Integer size) {
-        return repository.findByComodo(comodo, Pageable.ofSize(size).withPage(page));
+    public Page<Dispositivo> findByComodoAndIdosoId(String comodo, Long idosoId, Integer page, Integer size) {
+        return this.repository.findByComodoAndIdosoId(comodo, idosoId, Pageable.ofSize(size).withPage(page));
     }
 
     @Override
-    public Page<Dispositivo> findByStatus(DispositivoStatus status, Integer page, Integer size) {
-        return repository.findByStatus(status,Pageable.ofSize(size).withPage(page));
+    public Page<Dispositivo> findByStatusAndIdosoId(DispositivoStatus status, Long idosoId, Integer page, Integer size) {
+        return this.repository.findByStatusAndIdosoId(status, idosoId,Pageable.ofSize(size).withPage(page));
     }
 
     @Override
     public Dispositivo findWithEventosById(Long id) {
-        return repository.findWithEventosById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithEventosById(id).orElseThrow(/* () -> erro */);
     }
 }

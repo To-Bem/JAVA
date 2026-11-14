@@ -6,7 +6,7 @@ public record EventoResponse(
         Long id,
         String tipo,
         Integer valor,
-        LocalDateTime dataHora,
+        String dataHora,
         Long dispositivoId
 ) {
 }

@@ -9,7 +9,6 @@ public record AlertaRequest(
         String tipo,
         AlertaNivel nivel,
         AlertaStatus status,
-        Integer nivelEscalonamento,
-        LocalDateTime criadoEm
+        Integer nivelEscalonamento
 ) {
 }

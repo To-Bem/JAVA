@@ -10,7 +10,7 @@ public record DispositivoResponse(
         DispositivoTipo tipo,
         String comodo,
         DispositivoStatus status,
-        LocalDateTime ultimoHeartbeat,
+        String ultimoHeartbeat,
         Long idosoId
 ) {
 }

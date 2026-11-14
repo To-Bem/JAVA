@@ -14,13 +14,11 @@ public interface DispositivoRepository extends JpaRepository<Dispositivo, Long> 
 
     Page<Dispositivo> findByIdosoId(Long idosoId, Pageable pageable);
 
-    Page<Dispositivo> findByTipo(DispositivoTipo tipo, Pageable pageable);
+    Page<Dispositivo> findByTipoAndIdosoId(DispositivoTipo tipo,Long idosoId, Pageable pageable);
 
-    Page<Dispositivo> findByComodo(String comodo, Pageable pageable);
+    Page<Dispositivo> findByComodoAndIdosoId(String comodo, Long idosoId, Pageable pageable);
 
-    Page<Dispositivo> findByStatus(DispositivoStatus status, Pageable pageable);
-
-    Long id(Long id);
+    Page<Dispositivo> findByStatusAndIdosoId(DispositivoStatus status, Long idosoId, Pageable pageable);
 
     @EntityGraph(attributePaths = "eventos")
     Optional<Dispositivo> findWithEventosById(Long id);

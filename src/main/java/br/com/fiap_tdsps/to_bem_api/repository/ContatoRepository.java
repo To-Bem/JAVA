@@ -13,5 +13,8 @@ public interface ContatoRepository extends JpaRepository<Contato, Long> {
 
     Optional<Contato> findByUsuarioId(Long usuarioId);
 
-    Page<Contato> findByParentesco(String parentesco, Pageable pageable);
+    Optional<Contato> findFirstByIdoso_IdOrderByOrdemEscalonamentoAsc(Long idosoId);
+
+    Optional<Contato> findFirstByIdosoIdAndOrdemEscalonamentoGreaterThanOrderByOrdemEscalonamentoAsc(
+            Long idosoId, Integer ordemAtual);
 }

@@ -20,11 +20,11 @@ public interface DispositivoService {
 
     Page<Dispositivo> findByIdosoId(Long idosoId, Integer page, Integer size);
 
-    Page<Dispositivo> findByTipo(DispositivoTipo tipo, Integer page, Integer size);
+    Page<Dispositivo> findByTipoAndIdosoId(DispositivoTipo tipo, Long idosoId, Integer page, Integer size);
 
-    Page<Dispositivo> findByComodo(String comodo, Integer page, Integer size);
+    Page<Dispositivo> findByComodoAndIdosoId(String comodo, Long idosoId, Integer page, Integer size);
 
-    Page<Dispositivo> findByStatus(DispositivoStatus status, Integer page, Integer size);
+    Page<Dispositivo> findByStatusAndIdosoId(DispositivoStatus status, Long idosoId, Integer page, Integer size);
 
     Dispositivo findWithEventosById(Long id);
 }

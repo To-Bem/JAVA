@@ -17,7 +17,7 @@ public class Rotina {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String diaSemana;
-    private LocalTime horaPrimeiraAtividade;
+    private String horaPrimeiraAtividade;
     private Integer mediaLevantadasPorNoite;
 
     @ManyToOne(fetch = FetchType.LAZY)

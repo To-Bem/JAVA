@@ -20,43 +20,48 @@ public class ContatoServiceImpl implements ContatoService{
 
     @Override
     public Contato save(Contato contato) {
-        return repository.save(contato);
+        return this.repository.save(contato);
     }
 
     @Override
     public void delete(Long id) {
-        repository.delete(findById(id));
+        this.repository.delete(findById(id));
     }
 
     @Override
     public Contato update(Long id, Contato update) {
-        findById(id);
         update.setId(id);
-        return repository.save(update);
+        return this.repository.save(update);
     }
 
     @Override
     public Page<Contato> findAll(Integer page, Integer size) {
-        return repository.findAll(Pageable.ofSize(size).withPage(page));
+        return this.repository.findAll(Pageable.ofSize(size).withPage(page));
     }
 
     @Override
     public Contato findById(Long id) {
-        return repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Contato findByIdosoId(Long idosoId) {
-        return repository.findByIdosoId(idosoId).orElseThrow(/* () -> erro */);
+        return this.repository.findByIdosoId(idosoId).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Contato findByUsuarioId(Long usuarioId) {
-        return repository.findByUsuarioId(usuarioId).orElseThrow(/* () -> erro */);
+        return this.repository.findByUsuarioId(usuarioId).orElseThrow(/* () -> erro */);
+    }
+
+    public Contato findFirstByIdosoId(Long idosoId) {
+        return this.repository.findFirstByIdoso_IdOrderByOrdemEscalonamentoAsc(idosoId)
+                .orElseThrow(/* () -> erro */);
     }
 
     @Override
-    public Page<Contato> findByParentesco(String parentesco, Integer page, Integer size) {
-        return repository.findByParentesco(parentesco, Pageable.ofSize(size).withPage(page));
+    public Contato findFirstByIdosoIdAndOrdemEscalonamentoGreaterThanOrderByOrdemEscalonamentoAsc(Long idosoId, Integer ordemAtual) {
+        return this.repository.findFirstByIdosoIdAndOrdemEscalonamentoGreaterThanOrderByOrdemEscalonamentoAsc(idosoId, ordemAtual).
+                orElseThrow(/* () -> erro */);
     }
 }

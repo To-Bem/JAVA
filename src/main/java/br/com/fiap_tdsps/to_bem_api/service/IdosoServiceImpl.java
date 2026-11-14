@@ -18,53 +18,52 @@ public class IdosoServiceImpl implements  IdosoService{
 
     @Override
     public Idoso save(Idoso idoso) {
-        return repository.save(idoso);
+        return this.repository.save(idoso);
     }
 
     @Override
     public void delete(Long id) {
-        repository.delete(findById(id));
+        this.repository.delete(findById(id));
     }
 
     @Override
     public Idoso update(Long id, Idoso update) {
-        findById(id);
         update.setId(id);
-        return repository.save(update);
+        return this.repository.save(update);
     }
 
     @Override
     public Page<Idoso> findAll(Integer page, Integer size) {
-        return repository.findAll(Pageable.ofSize(size).withPage(page));
+        return this.repository.findAll(Pageable.ofSize(size).withPage(page));
     }
 
     @Override
     public Idoso findById(Long id) {
-        return repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Idoso findWithAllById(Long id) {
-        return repository.findWithAllById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithAllById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Contato findWithContatosById(Long id) {
-        return repository.findWithContatosById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithContatosById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Contato findWithAlertasById(Long id) {
-        return repository.findWithAlertasById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithAlertasById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Contato findWithRotinasById(Long id) {
-        return repository.findWithRotinasById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithRotinasById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
     public Contato findWithDispositivosById(Long id) {
-        return repository.findWithDispositivosById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithDispositivosById(id).orElseThrow(/* () -> erro */);
     }
 }

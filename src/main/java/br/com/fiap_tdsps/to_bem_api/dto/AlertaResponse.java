@@ -11,7 +11,7 @@ public record AlertaResponse(
         AlertaNivel nivel,
         AlertaStatus status,
         Integer nivelEscalonamento,
-        LocalDateTime criadoEm,
+        String criadoEm,
         Long usuarioId,
         Long idosoId
 ) {

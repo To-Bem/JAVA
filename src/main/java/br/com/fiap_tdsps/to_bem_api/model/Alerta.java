@@ -20,7 +20,7 @@ public class Alerta {
     private AlertaNivel nivel;
     private AlertaStatus status;
     private Integer nivelEscalonamento;
-    private LocalDateTime criadoEm;
+    private String criadoEm;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -29,4 +29,8 @@ public class Alerta {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idoso_id")
     private Idoso idoso;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evento_id")
+    private Evento evento;
 }

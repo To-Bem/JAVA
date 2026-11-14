@@ -20,7 +20,7 @@ public class Dispositivo {
     private DispositivoTipo tipo;
     private String comodo;
     private DispositivoStatus status;
-    private LocalDateTime ultimoHeartbeat;
+    private String ultimoHeartbeat;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idoso_id")

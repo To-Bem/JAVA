@@ -19,43 +19,47 @@ public class AlertaServiceImpl implements AlertaService{
 
     @Override
     public Alerta save(Alerta alerta) {
-        return repository.save(alerta);
+        return this.repository.save(alerta);
     }
 
     @Override
     public void delete(Long id) {
-        repository.delete(findById(id));
+        this.repository.delete(findById(id));
     }
 
     @Override
     public Alerta update(Long id, Alerta update) {
-        findById(id);
         update.setId(id);
-        return repository.save(update);
+        return this.repository.save(update);
     }
 
     @Override
     public Page<Alerta> findAll(Integer page, Integer size) {
-        return repository.findAll(Pageable.ofSize(size).withPage(page));
+        return this.repository.findAll(Pageable.ofSize(size).withPage(page));
     }
 
     @Override
     public Alerta findById(Long id) {
-        return repository.findById(id).orElseThrow(/*() -> erro */);
+        return this.repository.findById(id).orElseThrow(/*() -> erro */);
     }
 
     @Override
     public Page<Alerta> findByIdosoId(Long idosoId, Integer page, Integer size) {
-        return repository.findByIdosoId(idosoId, Pageable.ofSize(size).withPage(page));
+        return this.repository.findByIdosoId(idosoId, Pageable.ofSize(size).withPage(page));
     }
 
     @Override
-    public Page<Alerta> findByStatus(AlertaStatus status, Integer page, Integer size) {
-        return repository.findByStatus(status, Pageable.ofSize(size).withPage(page));
+    public Page<Alerta> findByStatusAndOtherId(AlertaStatus status,Long idosoId,Long usuarioId, Integer page, Integer size) {
+        return this.repository.findByStatusAndOtherId(status, idosoId, usuarioId, Pageable.ofSize(size).withPage(page));
     }
 
     @Override
-    public Page<Alerta> findByNivel(AlertaNivel nivel, Integer page, Integer size) {
-        return repository.findByNivel(nivel,Pageable.ofSize(size).withPage(page));
+    public Page<Alerta> findByNivelAndOtherId(AlertaNivel nivel, Long idosoId,Long usuarioId , Integer page, Integer size) {
+        return this.repository.findByNivelAndOtherId(nivel, idosoId, usuarioId,Pageable.ofSize(size).withPage(page));
+    }
+
+    @Override
+    public Page<Alerta> findByUsuarioId(Long usuarioId, Integer page, Integer size) {
+        return this.repository.findByUsuarioId(usuarioId,Pageable.ofSize(size).withPage(page));
     }
 }

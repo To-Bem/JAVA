@@ -19,5 +19,8 @@ public interface ContatoService {
 
     Contato findByUsuarioId(Long usuarioId);
 
-    Page<Contato> findByParentesco(String parentesco, Integer page, Integer size);
+    Contato findFirstByIdosoId(Long idosoId);
+
+    Contato findFirstByIdosoIdAndOrdemEscalonamentoGreaterThanOrderByOrdemEscalonamentoAsc(
+            Long idosoId, Integer ordemAtual);
 }

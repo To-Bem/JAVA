@@ -11,7 +11,7 @@ public record DispositivoWithEventosResponse(
         DispositivoTipo tipo,
         String comodo,
         DispositivoStatus status,
-        LocalDateTime ultimoHeartbeat,
+        String ultimoHeartbeat,
         Long idosoId,
         List<EventoResponse> eventos
 ) {

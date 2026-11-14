@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -18,9 +19,12 @@ public class Evento {
     private Long id;
     private String tipo;
     private Integer valor;
-    private LocalDateTime dataHora;
+    private String dataHora;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dispositivo_id")
     private Dispositivo dispositivo;
+
+    @OneToMany
+    private Set<Alerta> alertas;
 }
