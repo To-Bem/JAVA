@@ -102,4 +102,34 @@ public class IdosoController {
         Dispositivo save = this.dispositivoService.save(dispositivo);
         return ResponseEntity.created(URI.create("/api/dispositivos/" + save.getId())).body(DispositivoMapper.toResponse(save));
     }
+
+    @GetMapping("/{id}/withAlertas")
+    public ResponseEntity<IdosoWithAlertasResponse> findWithAlertasById(@PathVariable @Positive Long id){
+        Idoso idoso = this.idosoService.findWithAlertasById(id);
+        return ResponseEntity.ok(IdosoMapper.toResponseWithAlertas(idoso));
+    }
+
+    @GetMapping("/{id}/withAll")
+    public ResponseEntity<IdosoWithAllResponse> findWithAllById(@PathVariable @Positive Long id){
+        Idoso idoso = this.idosoService.findWithAllById(id);
+        return ResponseEntity.ok(IdosoMapper.toResponseWithAll(idoso));
+    }
+
+    @GetMapping("/{id}/withContatos")
+    public ResponseEntity<IdosoWithContatosResponse> findWithContatosById(@PathVariable @Positive Long id){
+        Idoso idoso = this.idosoService.findWithContatosById(id);
+        return ResponseEntity.ok(IdosoMapper.toResponseWithContatos(idoso));
+    }
+
+    @GetMapping("/{id}/withDispositivos")
+    public ResponseEntity<IdosoWithDispositivosResponse> findWithDispositivosById(@PathVariable @Positive Long id){
+        Idoso idoso = this.idosoService.findWithDispositivosById(id);
+        return ResponseEntity.ok(IdosoMapper.toResponseWithDispositivos(idoso));
+    }
+
+    @GetMapping("/{id}/withRotinas")
+    public ResponseEntity<IdosoWithRotinasResponse> findWithRotinasById(@PathVariable @Positive Long id){
+        Idoso idoso = this.idosoService.findWithRotinasById(id);
+        return ResponseEntity.ok(IdosoMapper.toResponseWithRotinas(idoso));
+    }
 }

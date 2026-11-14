@@ -48,22 +48,22 @@ public class IdosoServiceImpl implements  IdosoService{
     }
 
     @Override
-    public Contato findWithContatosById(Long id) {
+    public Idoso findWithContatosById(Long id) {
         return this.repository.findWithContatosById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
-    public Contato findWithAlertasById(Long id) {
+    public Idoso findWithAlertasById(Long id) {
         return this.repository.findWithAlertasById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
-    public Contato findWithRotinasById(Long id) {
+    public Idoso findWithRotinasById(Long id) {
         return this.repository.findWithRotinasById(id).orElseThrow(/* () -> erro */);
     }
 
     @Override
-    public Contato findWithDispositivosById(Long id) {
+    public Idoso findWithDispositivosById(Long id) {
         return this.repository.findWithDispositivosById(id).orElseThrow(/* () -> erro */);
     }
 }

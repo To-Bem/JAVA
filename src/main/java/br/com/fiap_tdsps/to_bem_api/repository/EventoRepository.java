@@ -3,6 +3,7 @@ package br.com.fiap_tdsps.to_bem_api.repository;
 import br.com.fiap_tdsps.to_bem_api.model.Evento;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -55,13 +55,7 @@ public class ContatoServiceImpl implements ContatoService{
     }
 
     public Contato findFirstByIdosoId(Long idosoId) {
-        return this.repository.findFirstByIdoso_IdOrderByOrdemEscalonamentoAsc(idosoId)
+        return this.repository.findFirstByIdosoIdOrderByOrdemEscalonamentoAsc(idosoId)
                 .orElseThrow(/* () -> erro */);
-    }
-
-    @Override
-    public Contato findFirstByIdosoIdAndOrdemEscalonamentoGreaterThanOrderByOrdemEscalonamentoAsc(Long idosoId, Integer ordemAtual) {
-        return this.repository.findFirstByIdosoIdAndOrdemEscalonamentoGreaterThanOrderByOrdemEscalonamentoAsc(idosoId, ordemAtual).
-                orElseThrow(/* () -> erro */);
     }
 }

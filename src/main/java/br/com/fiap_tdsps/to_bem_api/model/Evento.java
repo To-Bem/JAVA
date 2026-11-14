@@ -24,7 +24,4 @@ public class Evento {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dispositivo_id")
     private Dispositivo dispositivo;
-
-    @OneToMany
-    private Set<Alerta> alertas;
 }

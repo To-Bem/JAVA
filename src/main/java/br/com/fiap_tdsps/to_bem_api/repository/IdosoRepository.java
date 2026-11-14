@@ -1,6 +1,5 @@
 package br.com.fiap_tdsps.to_bem_api.repository;
 
-import br.com.fiap_tdsps.to_bem_api.model.Contato;
 import br.com.fiap_tdsps.to_bem_api.model.Idoso;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,13 +12,13 @@ public interface IdosoRepository extends JpaRepository<Idoso, Long> {
     Optional<Idoso> findWithAllById(Long id);
 
     @EntityGraph(attributePaths = "contatos")
-    Optional<Contato> findWithContatosById(Long id);
+    Optional<Idoso> findWithContatosById(Long id);
 
     @EntityGraph(attributePaths = "alertas")
-    Optional<Contato> findWithAlertasById(Long id);
+    Optional<Idoso> findWithAlertasById(Long id);
 
     @EntityGraph(attributePaths = "rotinas")
-    Optional<Contato> findWithRotinasById(Long id);
+    Optional<Idoso> findWithRotinasById(Long id);
 
-    Optional<Contato> findWithDispositivosById(Long id);
+    Optional<Idoso> findWithDispositivosById(Long id);
 }

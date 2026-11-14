@@ -110,4 +110,22 @@ public class UsuarioController {
 
         return ResponseEntity.created(URI.create("/api/idosos/" + save.getId())).body(IdosoMapper.toResponse(idoso));
     }
+
+    @GetMapping("/{id}/withAlertas")
+    public ResponseEntity<UsuarioWithAlertasResponse> findWithAlertasById(@PathVariable @Positive Long id){
+        Usuario usuario = this.usuarioService.findWithAlertasById(id);
+        return ResponseEntity.ok(UsuarioMapper.toResponseWithAlertas(usuario));
+    }
+
+    @GetMapping("/{id}/withAll")
+    public ResponseEntity<UsuarioWithAllResponse> findWithAllById(@PathVariable @Positive Long id){
+        Usuario usuario = this.usuarioService.findWithAllById(id);
+        return ResponseEntity.ok(UsuarioMapper.toResponseWithAll(usuario));
+    }
+
+    @GetMapping("/{id}/withContatos")
+    public ResponseEntity<UsuarioWithContatosResponse> findWithContatosById(@PathVariable @Positive Long id){
+        Usuario usuario = this.usuarioService.findWithContatosById(id);
+        return ResponseEntity.ok(UsuarioMapper.toResponseWithContatos(usuario));
+    }
 }

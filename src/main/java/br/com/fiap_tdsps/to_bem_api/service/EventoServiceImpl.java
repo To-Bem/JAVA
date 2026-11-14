@@ -50,4 +50,5 @@ public class EventoServiceImpl implements EventoService{
     public Page<Evento> findByTipoAndDispositivoId(String tipo,Long dispositivoId, Integer page, Integer size) {
         return this.repository.findByTipoAndDispositivoId(tipo, dispositivoId, Pageable.ofSize(size).withPage(page));
     }
+
 }

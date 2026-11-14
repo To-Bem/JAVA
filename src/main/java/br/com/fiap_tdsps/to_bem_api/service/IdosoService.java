@@ -1,10 +1,8 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
-import br.com.fiap_tdsps.to_bem_api.model.Contato;
 import br.com.fiap_tdsps.to_bem_api.model.Idoso;
 import org.springframework.data.domain.Page;
 
-import java.util.Optional;
 
 
 public interface IdosoService {
@@ -21,11 +19,11 @@ public interface IdosoService {
 
     Idoso findWithAllById(Long id);
 
-    Contato findWithContatosById(Long id);
+    Idoso findWithContatosById(Long id);
 
-    Contato findWithAlertasById(Long id);
+    Idoso findWithAlertasById(Long id);
 
-    Contato findWithRotinasById(Long id);
+    Idoso findWithRotinasById(Long id);
 
-    Contato findWithDispositivosById(Long id);
+    Idoso findWithDispositivosById(Long id);
 }

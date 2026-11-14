@@ -94,4 +94,10 @@ public class DispositivoController {
         Evento save = this.eventoService.save(evento);
         return ResponseEntity.created(URI.create("/api/eventos/" + save.getId())).body(EventoMapper.toResponse(save));
     }
+
+    @GetMapping("/{id}/withEventos")
+    public ResponseEntity<DispositivoWithEventosResponse> findWithEventosById(@PathVariable @Positive Long id){
+        Dispositivo dispositivo = this.dispositivoService.findWithEventosById(id);
+        return ResponseEntity.ok(DispositivoMapper.toResponseWithEventos(dispositivo));
+    }
 }

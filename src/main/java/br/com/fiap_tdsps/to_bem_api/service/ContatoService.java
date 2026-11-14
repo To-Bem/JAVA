@@ -21,6 +21,5 @@ public interface ContatoService {
 
     Contato findFirstByIdosoId(Long idosoId);
 
-    Contato findFirstByIdosoIdAndOrdemEscalonamentoGreaterThanOrderByOrdemEscalonamentoAsc(
-            Long idosoId, Integer ordemAtual);
+
 }
