@@ -1,5 +1,6 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Usuario;
 import br.com.fiap_tdsps.to_bem_api.model.UsuarioPapel;
 import br.com.fiap_tdsps.to_bem_api.repository.UsuarioRepository;
@@ -39,7 +40,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     public Usuario findById(Long id) {
-        return this.repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("usuario", id));
     }
 
     @Override
@@ -49,12 +50,12 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     public Usuario findWithAlertasById(Long id) {
-        return this.repository.findWithAlertasById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithAlertasById(id).orElseThrow(() -> new ResourceNotFoundException("usuario", id));
     }
 
     @Override
     public Usuario findWithContatosById(Long id) {
-        return this.repository.findWithContatosById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithContatosById(id).orElseThrow(() -> new ResourceNotFoundException("usuario", id));
     }
 
     @Override

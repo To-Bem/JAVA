@@ -3,6 +3,7 @@ package br.com.fiap_tdsps.to_bem_api.controller;
 import br.com.fiap_tdsps.to_bem_api.dto.ContatoRequest;
 import br.com.fiap_tdsps.to_bem_api.dto.ContatoResponse;
 import br.com.fiap_tdsps.to_bem_api.dto.PageResponse;
+import br.com.fiap_tdsps.to_bem_api.exceptions.MoreThanOneFilter;
 import br.com.fiap_tdsps.to_bem_api.mapper.ContatoMapper;
 import br.com.fiap_tdsps.to_bem_api.model.Contato;
 import br.com.fiap_tdsps.to_bem_api.service.ContatoService;
@@ -54,11 +55,17 @@ public class ContatoController {
     @GetMapping("/byOtherId")
     public ResponseEntity<ContatoResponse> findByOtherId(@RequestParam(required = false) @Positive Long idosoId,
                                                          @RequestParam(required = false) @Positive Long usarioId){
-        Contato contato = idosoId != null && usarioId == null ?
-                this.contatoService.findByIdosoId(idosoId) :
-                idosoId == null && usarioId != null ?
-                        this.contatoService.findByUsuarioId(usarioId) :
-                        null ; // lançar MoreThanOneFilter
+        Contato contato;
+
+        if (idosoId != null && usarioId == null) {
+            contato = this.contatoService.findByIdosoId(idosoId);
+
+        } else if (idosoId == null && usarioId != null) {
+            contato = this.contatoService.findByUsuarioId(usarioId);
+        } else {
+            throw  new MoreThanOneFilter();
+        }
+
 
         return ResponseEntity.ok(ContatoMapper.toResponse(contato));
     }

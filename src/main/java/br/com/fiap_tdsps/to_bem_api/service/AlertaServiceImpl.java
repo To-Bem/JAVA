@@ -1,5 +1,6 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Alerta;
 import br.com.fiap_tdsps.to_bem_api.model.AlertaNivel;
 import br.com.fiap_tdsps.to_bem_api.model.AlertaStatus;
@@ -40,7 +41,7 @@ public class AlertaServiceImpl implements AlertaService{
 
     @Override
     public Alerta findById(Long id) {
-        return this.repository.findById(id).orElseThrow(/*() -> erro */);
+        return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("alerta", id));
     }
 
     @Override

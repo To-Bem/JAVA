@@ -1,5 +1,6 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Dispositivo;
 import br.com.fiap_tdsps.to_bem_api.model.DispositivoStatus;
 import br.com.fiap_tdsps.to_bem_api.model.DispositivoTipo;
@@ -42,7 +43,7 @@ public class DispositivoServiceImpl implements DispositivoService{
 
     @Override
     public Dispositivo findById(Long id) {
-        return this.repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("dispositivo", id));
     }
 
     @Override
@@ -67,6 +68,6 @@ public class DispositivoServiceImpl implements DispositivoService{
 
     @Override
     public Dispositivo findWithEventosById(Long id) {
-        return this.repository.findWithEventosById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithEventosById(id).orElseThrow(() -> new ResourceNotFoundException("dispositivo", id));
     }
 }

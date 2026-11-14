@@ -3,6 +3,8 @@ package br.com.fiap_tdsps.to_bem_api.controller;
 import br.com.fiap_tdsps.to_bem_api.dto.AlertaRequest;
 import br.com.fiap_tdsps.to_bem_api.dto.AlertaResponse;
 import br.com.fiap_tdsps.to_bem_api.dto.PageResponse;
+import br.com.fiap_tdsps.to_bem_api.exceptions.InvalidAlertaResend;
+import br.com.fiap_tdsps.to_bem_api.exceptions.MoreThanOneFilter;
 import br.com.fiap_tdsps.to_bem_api.mapper.AlertaMapper;
 import br.com.fiap_tdsps.to_bem_api.model.Alerta;
 import br.com.fiap_tdsps.to_bem_api.model.AlertaNivel;
@@ -57,15 +59,23 @@ public class AlertaController {
                                                              @RequestParam(required = false, defaultValue = "0") @PositiveOrZero Integer page,
                                                              @RequestParam(required = false,defaultValue = "10") @Positive Integer size){
 
-        Page<Alerta> pageResult = status != null && nivel == null && (idosoId != null || usuarioId != null) ?
-                this.alertaService.findByStatusAndOtherId(status,idosoId,usuarioId,page,size) :
-                status == null && nivel != null && (idosoId != null || usuarioId != null) ?
-                        this.alertaService.findByNivelAndOtherId(nivel,idosoId,usuarioId,page,size) :
-                        status == null && nivel == null && idosoId != null && usuarioId == null ?
-                                this.alertaService.findByIdosoId(idosoId,page,size) :
-                                status == null && nivel == null && idosoId == null && usuarioId != null ?
-                                        this.alertaService.findByUsuarioId(usuarioId,page, size) :
-                                        null ; //lançar MoreThanOneFilter
+        Page<Alerta> pageResult;
+
+        if (status != null && nivel == null && (idosoId != null || usuarioId != null)) {
+            pageResult = this.alertaService.findByStatusAndOtherId(status, idosoId, usuarioId, page, size);
+
+        } else if (status == null && nivel != null && (idosoId != null || usuarioId != null)) {
+            pageResult = this.alertaService.findByNivelAndOtherId(nivel, idosoId, usuarioId, page, size);
+
+        } else if (status == null && nivel == null && idosoId != null && usuarioId == null) {
+            pageResult = this.alertaService.findByIdosoId(idosoId, page, size);
+
+        } else if (status == null && nivel == null && idosoId == null && usuarioId != null) {
+            pageResult = this.alertaService.findByUsuarioId(usuarioId, page, size);
+
+        } else {
+            throw new MoreThanOneFilter();
+        }
 
         return PageResponse.from(pageResult.map(AlertaMapper::toResponse));
     }
@@ -95,7 +105,7 @@ public class AlertaController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/reSend")
+    @PostMapping("/{id}/resend")
     public ResponseEntity<AlertaResponse> reSendAlerta(@PathVariable @Positive Long id,
                                                        @RequestParam @Positive Integer oredemAtual){
         Alerta alerta = this.alertaService.findById(id);
@@ -112,7 +122,6 @@ public class AlertaController {
             Alerta save = this.alertaService.save(reSend);
             return ResponseEntity.created(URI.create("/api/alertas/" + save.getId())).body(AlertaMapper.toResponse(save));
         }
-        //InvalidAlertaResend
-        return null;
+        throw new InvalidAlertaResend();
     }
 }

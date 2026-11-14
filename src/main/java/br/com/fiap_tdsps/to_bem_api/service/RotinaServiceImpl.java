@@ -1,5 +1,6 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Rotina;
 import br.com.fiap_tdsps.to_bem_api.repository.RotinaRepository;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,7 @@ public class RotinaServiceImpl implements RotinaService{
 
     @Override
     public Rotina findById(Long id) {
-        return this.repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("rotina", id));
     }
 
     @Override

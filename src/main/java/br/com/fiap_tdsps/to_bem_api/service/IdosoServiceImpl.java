@@ -1,5 +1,6 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Contato;
 import br.com.fiap_tdsps.to_bem_api.model.Idoso;
 import br.com.fiap_tdsps.to_bem_api.repository.IdosoRepository;
@@ -39,31 +40,31 @@ public class IdosoServiceImpl implements  IdosoService{
 
     @Override
     public Idoso findById(Long id) {
-        return this.repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("idoso", id));
     }
 
     @Override
     public Idoso findWithAllById(Long id) {
-        return this.repository.findWithAllById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithAllById(id).orElseThrow(() -> new ResourceNotFoundException("idoso", id));
     }
 
     @Override
     public Idoso findWithContatosById(Long id) {
-        return this.repository.findWithContatosById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithContatosById(id).orElseThrow(() -> new ResourceNotFoundException("idoso", id));
     }
 
     @Override
     public Idoso findWithAlertasById(Long id) {
-        return this.repository.findWithAlertasById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithAlertasById(id).orElseThrow(() -> new ResourceNotFoundException("idoso", id));
     }
 
     @Override
     public Idoso findWithRotinasById(Long id) {
-        return this.repository.findWithRotinasById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithRotinasById(id).orElseThrow(() -> new ResourceNotFoundException("idoso", id));
     }
 
     @Override
     public Idoso findWithDispositivosById(Long id) {
-        return this.repository.findWithDispositivosById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findWithDispositivosById(id).orElseThrow(() -> new ResourceNotFoundException("idoso", id));
     }
 }

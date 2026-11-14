@@ -1,6 +1,7 @@
 package br.com.fiap_tdsps.to_bem_api.controller;
 
 import br.com.fiap_tdsps.to_bem_api.dto.*;
+import br.com.fiap_tdsps.to_bem_api.exceptions.MoreThanOneFilter;
 import br.com.fiap_tdsps.to_bem_api.mapper.DispositivoMapper;
 import br.com.fiap_tdsps.to_bem_api.mapper.EventoMapper;
 import br.com.fiap_tdsps.to_bem_api.model.*;
@@ -49,15 +50,23 @@ public class DispositivoController {
                                                                @RequestParam(required = false) DispositivoStatus status,
                                                                @RequestParam(required = false,defaultValue = "0") @PositiveOrZero Integer page,
                                                                @RequestParam(required = false,defaultValue = "10") @Positive Integer size){
-        Page<Dispositivo> pageResult = tipo != null && comodo == null && status == null ?
-                this.dispositivoService.findByTipoAndIdosoId(tipo,idosoId,page,size) :
-                tipo == null && comodo != null && status == null ?
-                        this.dispositivoService.findByComodoAndIdosoId(comodo,idosoId,page,size) :
-                        tipo == null && comodo == null && status != null ?
-                                this.dispositivoService.findByStatusAndIdosoId(status,idosoId,page,size) :
-                                tipo == null && comodo == null && status == null ?
-                                        this.dispositivoService.findByIdosoId(idosoId,page,size) :
-                                        null ; //lançar MoreThanOneFilter
+        Page<Dispositivo> pageResult;
+
+        if (tipo != null && comodo == null && status == null) {
+            pageResult = this.dispositivoService.findByTipoAndIdosoId(tipo, idosoId, page, size);
+
+        } else if (tipo == null && comodo != null && status == null) {
+            pageResult = this.dispositivoService.findByComodoAndIdosoId(comodo, idosoId, page, size);
+
+        } else if (tipo == null && comodo == null && status != null) {
+            pageResult = this.dispositivoService.findByStatusAndIdosoId(status, idosoId, page, size);
+
+        } else if (tipo == null && comodo == null && status == null) {
+            pageResult = this.dispositivoService.findByIdosoId(idosoId, page, size);
+
+        } else {
+            throw new MoreThanOneFilter();
+        }
 
         return PageResponse.from(pageResult.map(DispositivoMapper::toResponse));
     }

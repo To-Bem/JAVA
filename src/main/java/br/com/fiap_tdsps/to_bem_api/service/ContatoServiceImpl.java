@@ -1,5 +1,6 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Contato;
 import br.com.fiap_tdsps.to_bem_api.model.Dispositivo;
 import br.com.fiap_tdsps.to_bem_api.repository.ContatoRepository;
@@ -41,21 +42,21 @@ public class ContatoServiceImpl implements ContatoService{
 
     @Override
     public Contato findById(Long id) {
-        return this.repository.findById(id).orElseThrow(/* () -> erro */);
+        return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("contato", id));
     }
 
     @Override
     public Contato findByIdosoId(Long idosoId) {
-        return this.repository.findByIdosoId(idosoId).orElseThrow(/* () -> erro */);
+        return this.repository.findByIdosoId(idosoId).orElseThrow(() -> new ResourceNotFoundException("idoso", idosoId));
     }
 
     @Override
     public Contato findByUsuarioId(Long usuarioId) {
-        return this.repository.findByUsuarioId(usuarioId).orElseThrow(/* () -> erro */);
+        return this.repository.findByUsuarioId(usuarioId).orElseThrow(() -> new ResourceNotFoundException("usuario", usuarioId));
     }
 
     public Contato findFirstByIdosoId(Long idosoId) {
         return this.repository.findFirstByIdosoIdOrderByOrdemEscalonamentoAsc(idosoId)
-                .orElseThrow(/* () -> erro */);
+                .orElseThrow(() -> new ResourceNotFoundException("contato", idosoId));
     }
 }
