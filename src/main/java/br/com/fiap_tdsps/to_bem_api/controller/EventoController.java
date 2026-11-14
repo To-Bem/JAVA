@@ -5,6 +5,7 @@ import br.com.fiap_tdsps.to_bem_api.mapper.AlertaMapper;
 import br.com.fiap_tdsps.to_bem_api.mapper.EventoMapper;
 import br.com.fiap_tdsps.to_bem_api.model.*;
 import br.com.fiap_tdsps.to_bem_api.service.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
@@ -80,7 +81,7 @@ public class EventoController {
 
     @PostMapping("/{id}/alerta")
     public ResponseEntity<AlertaResponse> saveAlerta(@PathVariable @Positive Long id,
-                                                     @RequestBody AlertaRequest alertaRequest){
+                                                     @RequestBody @Valid AlertaRequest alertaRequest){
         Alerta alerta = new Alerta();
 
         alerta.setCriadoEm(LocalDateTime.now().format(CommonVariables.dateTimeFormatter));

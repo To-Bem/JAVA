@@ -6,6 +6,7 @@ import br.com.fiap_tdsps.to_bem_api.mapper.EventoMapper;
 import br.com.fiap_tdsps.to_bem_api.model.*;
 import br.com.fiap_tdsps.to_bem_api.service.DispositivoService;
 import br.com.fiap_tdsps.to_bem_api.service.EventoService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
@@ -83,7 +84,7 @@ public class DispositivoController {
 
     @PostMapping("/{id}/evento")
     public ResponseEntity<EventoResponse> saveEvento(@PathVariable @Positive Long id,
-                                                     @RequestBody EventoRequest eventoRequest){
+                                                     @RequestBody @Valid EventoRequest eventoRequest){
         Evento evento = new Evento();
         evento.setDataHora(eventoRequest.dataHora().format(CommonVariables.dateTimeFormatter));
         evento.setDispositivo(this.dispositivoService.findById(id));
