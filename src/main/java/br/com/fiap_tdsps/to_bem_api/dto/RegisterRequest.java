@@ -1,5 +1,7 @@
 package br.com.fiap_tdsps.to_bem_api.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,14 +10,17 @@ import jakarta.validation.constraints.Size;
 public record RegisterRequest(
         @NotBlank(message = "name é obrigatório")
         @Size(max = 100, message = "name deve ter no máximo 100 caracteres")
+        @Schema(description = "Nome.", example = "Maria Silva")
         String name,
 
         @NotBlank(message = "email é obrigatório")
         @Email(message = "email inválido")
+        @Schema(description = "Email.", example = "maria@example.com")
         String email,
 
         @NotBlank(message = "password é obrigatório")
         @Size(min = 8, max = 72, message = "password deve ter entre 8 e 72 caracteres")
+        @Schema(description = "Senha.", example = "Senha12345", accessMode = Schema.AccessMode.WRITE_ONLY)
         String password
 ) {
 }

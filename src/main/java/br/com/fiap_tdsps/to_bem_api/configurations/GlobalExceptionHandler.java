@@ -55,16 +55,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, message);
     }
 
-    @ExceptionHandler(UnknownFilter.class)
-    public ResponseEntity<ErrorCustomResponse> handleMoreThanOneFilter(UnknownFilter ex){
-        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
-    @ExceptionHandler(InvalidAlertaResend.class)
-    public ResponseEntity<ErrorCustomResponse> handleInvalidAlertaResend(InvalidAlertaResend ex){
-        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResponse> handleArgumentNotValidException(MethodArgumentNotValidException ex){
 
@@ -92,20 +82,10 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Corpo da requisição inválido ou malformado");
     }
 
-    @ExceptionHandler(RoleNotPermitted.class)
-    public ResponseEntity<ErrorCustomResponse> handleRoleNotPermitted(RoleNotPermitted ex){
-        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorCustomResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex){
         return build(HttpStatus.BAD_REQUEST, "O parâmetro obrigatório '" + ex.getParameterName() + "' não foi informado.");
     }
-    @ExceptionHandler(ResourceNotCreated.class)
-    public ResponseEntity<ErrorCustomResponse> handleEntityNotCreated(ResourceNotCreated ex){
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-    }
-
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorCustomResponse> handleResponseStatus(ResponseStatusException ex) {
         return build(HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason());
@@ -117,14 +97,15 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, "Dados duplicados, obrigatorios ausentes ou registro vinculado a outro recurso.");
     }
 
-    @ExceptionHandler(EmailAlreadyRegisteredException.class)
-    public ResponseEntity<ErrorCustomResponse> handleEmailAlreadyRegistered(EmailAlreadyRegisteredException ex) {
-        return build(HttpStatus.CONFLICT, ex.getMessage());
-    }
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorCustomResponse> handleIllegalArgument(IllegalArgumentException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<ErrorCustomResponse> handleNoResourceFound(
+            org.springframework.web.servlet.resource.NoResourceFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, "Recurso nao encontrado.");
     }
 
     @ExceptionHandler(Exception.class)

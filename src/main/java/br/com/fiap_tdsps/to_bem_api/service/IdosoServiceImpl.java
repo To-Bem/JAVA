@@ -1,11 +1,6 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
-import org.springframework.data.domain.Sort;
-
-import org.springframework.data.domain.PageRequest;
-
 import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
-import br.com.fiap_tdsps.to_bem_api.model.CommonVariables;
 import br.com.fiap_tdsps.to_bem_api.model.Contato;
 import br.com.fiap_tdsps.to_bem_api.model.Idoso;
 import br.com.fiap_tdsps.to_bem_api.model.Usuario;
@@ -30,11 +25,6 @@ public class IdosoServiceImpl implements  IdosoService{
     }
 
     @Override
-    public Idoso save(Idoso idoso) {
-        return this.repository.save(idoso);
-    }
-
-    @Override
     public void delete(Long id) {
         this.repository.delete(findById(id));
     }
@@ -43,11 +33,6 @@ public class IdosoServiceImpl implements  IdosoService{
     public Idoso update(Long id, Idoso update) {
         update.setId(id);
         return this.repository.save(update);
-    }
-
-    @Override
-    public Page<Idoso> findAll(Integer page, Integer size) {
-        return this.findAll(PageRequest.of(page, size, Sort.by("id")));
     }
 
     @Override

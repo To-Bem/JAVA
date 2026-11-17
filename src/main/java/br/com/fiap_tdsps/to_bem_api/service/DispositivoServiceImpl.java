@@ -2,10 +2,6 @@ package br.com.fiap_tdsps.to_bem_api.service;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import org.springframework.data.domain.Sort;
-
-import org.springframework.data.domain.PageRequest;
-
 import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Dispositivo;
 import br.com.fiap_tdsps.to_bem_api.model.DispositivoStatus;
@@ -14,9 +10,6 @@ import br.com.fiap_tdsps.to_bem_api.repository.DispositivoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import br.com.fiap_tdsps.to_bem_api.model.*;
-
-import java.util.Optional;
 
 @Service
 public class DispositivoServiceImpl implements DispositivoService{
@@ -44,11 +37,6 @@ public class DispositivoServiceImpl implements DispositivoService{
     }
 
     @Override
-    public Page<Dispositivo> findAll(Integer page, Integer size) {
-        return this.findAll(PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
     public Page<Dispositivo> findAll(Pageable pageable) {
         return this.repository.findAll(pageable);
     }
@@ -56,46 +44,6 @@ public class DispositivoServiceImpl implements DispositivoService{
     @Override
     public Dispositivo findById(Long id) {
         return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("dispositivo", id));
-    }
-
-    @Override
-    public Page<Dispositivo> findByIdosoId(Long idosoId, Integer page, Integer size) {
-        return this.findByIdosoId(idosoId, PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
-    public Page<Dispositivo> findByIdosoId(Long idosoId, Pageable pageable) {
-        return this.repository.findByIdosoId(idosoId, pageable);
-    }
-
-    @Override
-    public Page<Dispositivo> findByTipoAndIdosoId(DispositivoTipo tipo,Long idosoId, Integer page, Integer size) {
-        return this.findByTipoAndIdosoId(tipo, idosoId, PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
-    public Page<Dispositivo> findByTipoAndIdosoId(DispositivoTipo tipo,Long idosoId, Pageable pageable) {
-        return this.repository.findByTipoAndIdosoId(tipo, idosoId,pageable);
-    }
-
-    @Override
-    public Page<Dispositivo> findByComodoAndIdosoId(String comodo, Long idosoId, Integer page, Integer size) {
-        return this.findByComodoAndIdosoId(comodo, idosoId, PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
-    public Page<Dispositivo> findByComodoAndIdosoId(String comodo, Long idosoId, Pageable pageable) {
-        return this.repository.findByComodoAndIdosoId(comodo, idosoId, pageable);
-    }
-
-    @Override
-    public Page<Dispositivo> findByStatusAndIdosoId(DispositivoStatus status, Long idosoId, Integer page, Integer size) {
-        return this.findByStatusAndIdosoId(status, idosoId, PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
-    public Page<Dispositivo> findByStatusAndIdosoId(DispositivoStatus status, Long idosoId, Pageable pageable) {
-        return this.repository.findByStatusAndIdosoId(status, idosoId,pageable);
     }
 
     @Override

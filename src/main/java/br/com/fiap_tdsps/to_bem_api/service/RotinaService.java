@@ -13,11 +13,7 @@ public interface RotinaService {
 
     Rotina update(Long id, Rotina update);
 
-    Page<Rotina> findAll(Integer page, Integer size);
-
     Rotina findById(Long id);
-
-    Page<Rotina> findByIdosoId(Long idosoId, Integer page, Integer size);
 
     Page<Rotina> findAll(Pageable pageable);
     Page<Rotina> findByIdosoId(Long idosoId, Pageable pageable);

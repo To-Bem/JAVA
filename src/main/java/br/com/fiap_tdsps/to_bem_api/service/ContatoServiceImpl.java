@@ -2,19 +2,12 @@ package br.com.fiap_tdsps.to_bem_api.service;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import org.springframework.data.domain.Sort;
-
-import org.springframework.data.domain.PageRequest;
-
 import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Contato;
-import br.com.fiap_tdsps.to_bem_api.model.Dispositivo;
 import br.com.fiap_tdsps.to_bem_api.repository.ContatoRepository;
-import org.springframework.boot.data.metrics.DefaultRepositoryTagsProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import br.com.fiap_tdsps.to_bem_api.model.*;
 
 @Service
 public class ContatoServiceImpl implements ContatoService{
@@ -24,7 +17,6 @@ public class ContatoServiceImpl implements ContatoService{
     public ContatoServiceImpl(ContatoRepository repository){
         this.repository = repository;
     }
-
 
     @Override
     public Contato save(Contato contato) {
@@ -45,11 +37,6 @@ public class ContatoServiceImpl implements ContatoService{
     }
 
     @Override
-    public Page<Contato> findAll(Integer page, Integer size) {
-        return this.findAll(PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
     public Page<Contato> findAll(Pageable pageable) {
         return this.repository.findAll(pageable);
     }
@@ -57,26 +44,6 @@ public class ContatoServiceImpl implements ContatoService{
     @Override
     public Contato findById(Long id) {
         return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("contato", id));
-    }
-
-    @Override
-    public Page<Contato> findByIdosoId(Long idosoId, Integer page, Integer size) {
-        return this.findByIdosoId(idosoId, PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
-    public Page<Contato> findByIdosoId(Long idosoId, Pageable pageable) {
-        return this.repository.findByIdosoId(idosoId, pageable);
-    }
-
-    @Override
-    public Page<Contato> findByUsuarioId(Long usuarioId, Integer page, Integer size) {
-        return this.findByUsuarioId(usuarioId, PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
-    public Page<Contato> findByUsuarioId(Long usuarioId, Pageable pageable) {
-        return this.repository.findByUsuarioId(usuarioId, pageable);
     }
 
     public Contato findFirstByIdosoId(Long idosoId) {

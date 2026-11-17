@@ -42,7 +42,6 @@ public class JwtService {
         return parseToken(token).getSubject();
     }
 
-
     public boolean isTokenValid(String token, UserDetails userDetails) {
         Claims claims = parseToken(token);
         return claims.getSubject().equals(userDetails.getUsername())

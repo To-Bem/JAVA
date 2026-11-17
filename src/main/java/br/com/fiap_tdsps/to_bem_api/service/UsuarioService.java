@@ -14,11 +14,7 @@ public interface UsuarioService {
 
     Usuario update(Long id, Usuario update);
 
-    Page<Usuario> findAll(Integer page, Integer size);
-
     Usuario findById(Long id);
-
-    Page<Usuario> findByPapel(UsuarioPapel papel, Integer page, Integer size);
 
     Usuario findWithAlertasById(Long id);
 
@@ -27,8 +23,6 @@ public interface UsuarioService {
     Usuario findWithAllById(Long id);
 
     Page<Usuario> findAll(Pageable pageable);
-    Page<Usuario> findByPapel(UsuarioPapel papel, Pageable pageable);
-
     boolean existsByEmail(String email);
 
     Usuario register(String name, String email, String rawPassword);

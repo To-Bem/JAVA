@@ -13,20 +13,10 @@ public interface ContatoService {
 
     Contato update(Long id, Contato update);
 
-    Page<Contato> findAll(Integer page, Integer size);
-
     Contato findById(Long id);
-
-    Page<Contato> findByIdosoId(Long idosoId, Integer page, Integer size);
-
-    Page<Contato> findByUsuarioId(Long usuarioId,Integer page, Integer size);
 
     Contato findFirstByIdosoId(Long idosoId);
 
-
-
     Page<Contato> findAll(Pageable pageable);
-    Page<Contato> findByIdosoId(Long idosoId, Pageable pageable);
-    Page<Contato> findByUsuarioId(Long usuarioId, Pageable pageable);
     Page<Contato> findByOtherFilter(Long idosoId, Long usuarioId, Pageable pageable);
 }

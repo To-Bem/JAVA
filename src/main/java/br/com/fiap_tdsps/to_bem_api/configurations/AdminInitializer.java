@@ -2,7 +2,6 @@ package br.com.fiap_tdsps.to_bem_api.configurations;
 
 import br.com.fiap_tdsps.to_bem_api.model.Role;
 import br.com.fiap_tdsps.to_bem_api.model.Usuario;
-import br.com.fiap_tdsps.to_bem_api.model.UsuarioPapel;
 import br.com.fiap_tdsps.to_bem_api.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;

@@ -1,9 +1,5 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
-import org.springframework.data.domain.Sort;
-
-import org.springframework.data.domain.PageRequest;
-
 import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Rotina;
 import br.com.fiap_tdsps.to_bem_api.repository.RotinaRepository;
@@ -37,11 +33,6 @@ public class RotinaServiceImpl implements RotinaService{
     }
 
     @Override
-    public Page<Rotina> findAll(Integer page, Integer size) {
-        return this.findAll(PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
     public Page<Rotina> findAll(Pageable pageable) {
         return this.repository.findAll(pageable);
     }
@@ -49,11 +40,6 @@ public class RotinaServiceImpl implements RotinaService{
     @Override
     public Rotina findById(Long id) {
         return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("rotina", id));
-    }
-
-    @Override
-    public Page<Rotina> findByIdosoId(Long idosoId, Integer page, Integer size) {
-        return this.findByIdosoId(idosoId, PageRequest.of(page, size, Sort.by("id")));
     }
 
     @Override

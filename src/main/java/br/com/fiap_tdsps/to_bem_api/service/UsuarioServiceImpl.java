@@ -1,9 +1,6 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
 import br.com.fiap_tdsps.to_bem_api.model.Role;
-import org.springframework.data.domain.Sort;
-
-import org.springframework.data.domain.PageRequest;
 
 import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Usuario;
@@ -53,11 +50,6 @@ public class UsuarioServiceImpl implements UsuarioService{
     }
 
     @Override
-    public Page<Usuario> findAll(Integer page, Integer size) {
-        return this.findAll(PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
     public Page<Usuario> findAll(Pageable pageable) {
         return this.repository.findAll(pageable);
     }
@@ -65,16 +57,6 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Override
     public Usuario findById(Long id) {
         return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("usuario", id));
-    }
-
-    @Override
-    public Page<Usuario> findByPapel(UsuarioPapel papel, Integer page, Integer size) {
-        return this.findByPapel(papel, PageRequest.of(page, size, Sort.by("id")));
-    }
-
-    @Override
-    public Page<Usuario> findByPapel(UsuarioPapel papel, Pageable pageable) {
-        return this.repository.findByPapel(papel, pageable);
     }
 
     @Override

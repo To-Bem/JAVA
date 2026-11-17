@@ -1,5 +1,16 @@
 package br.com.fiap_tdsps.to_bem_api.controller;
 
+import br.com.fiap_tdsps.to_bem_api.dto.ErrorCustomResponse;
+import br.com.fiap_tdsps.to_bem_api.dto.ValidationErrorResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import br.com.fiap_tdsps.to_bem_api.service.Paginacao;
 
 import org.springframework.data.domain.Sort;
@@ -19,8 +30,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+@Tag(name = "Eventos")
 @RestController
 @RequestMapping("/api/eventos")
 @Validated
@@ -41,36 +52,98 @@ public class EventoController {
         this. dispositivoService = dispositivoService;
     }
 
+    @Operation(summary = "Lista eventos", description = "Exclusivo para ADMIN ou MANAGER.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Sucesso.", useReturnTypeSchema = true,
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Dados ou parâmetros inválidos.",
+                content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ErrorCustomResponse.class, ValidationErrorResponse.class}))),
+        @ApiResponse(responseCode = "403", description = "Usuário sem permissão.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Autenticação ausente ou inválida.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "500", description = "Erro interno.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class)))
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @GetMapping
-    public PageResponse<EventoResponse> findAll(@RequestParam(required = false,defaultValue = "0") @PositiveOrZero Integer page,
-                                                @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "ASC") Sort.Direction direction){
+    public PageResponse<EventoResponse> findAll(@Parameter(description = "Página, iniciando em 0.") @RequestParam(required = false,defaultValue = "0") @PositiveOrZero Integer page,
+                                                @Parameter(description = "Quantidade de registros por página.") @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
+            @Parameter(description = "Campo simples usado na ordenação.") @RequestParam(defaultValue = "id") String sort,
+            @Parameter(description = "Direção da ordenação.") @RequestParam(defaultValue = "ASC") Sort.Direction direction){
         Page<Evento> pageResult = this.eventoService.findAll(Paginacao.criar(page, size, sort, direction, Evento.class));
         return PageResponse.from(pageResult.map(EventoMapper::toResponse));
     }
 
+    @Operation(summary = "Filtra eventos", description = "Combina os filtros informados.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Sucesso.", useReturnTypeSchema = true,
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Dados ou parâmetros inválidos.",
+                content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ErrorCustomResponse.class, ValidationErrorResponse.class}))),
+        @ApiResponse(responseCode = "403", description = "Usuário sem permissão.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Autenticação ausente ou inválida.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "500", description = "Erro interno.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class)))
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER') or @permissaoService.podeAcessarDispositivo(#dispositivoId)")
     @GetMapping("/byOtherFilter")
-    public PageResponse<EventoResponse> findByOtherFilter(@RequestParam @Positive Long dispositivoId,
-                                                          @RequestParam(required = false) String tipo,
-                                                          @RequestParam(required = false,defaultValue = "0") @PositiveOrZero Integer page,
-                                                          @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "ASC") Sort.Direction direction){
+    public PageResponse<EventoResponse> findByOtherFilter(@Parameter(description = "ID do dispositivo.") @RequestParam @Positive Long dispositivoId,
+                                                          @Parameter(description = "Tipo para filtrar.") @RequestParam(required = false) String tipo,
+                                                          @Parameter(description = "Página, iniciando em 0.") @RequestParam(required = false,defaultValue = "0") @PositiveOrZero Integer page,
+                                                          @Parameter(description = "Quantidade de registros por página.") @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
+            @Parameter(description = "Campo simples usado na ordenação.") @RequestParam(defaultValue = "id") String sort,
+            @Parameter(description = "Direção da ordenação.") @RequestParam(defaultValue = "ASC") Sort.Direction direction){
         Page<Evento> pageResult = this.eventoService.findByOtherFilter(dispositivoId, tipo,
                 Paginacao.criar(page, size, sort, direction, Evento.class));
         return  PageResponse.from(pageResult.map(EventoMapper::toResponse));
     }
 
+    @Operation(summary = "Consulta evento por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Sucesso.", useReturnTypeSchema = true,
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Dados ou parâmetros inválidos.",
+                content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ErrorCustomResponse.class, ValidationErrorResponse.class}))),
+        @ApiResponse(responseCode = "403", description = "Usuário sem permissão.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Autenticação ausente ou inválida.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Registro não encontrado.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "500", description = "Erro interno.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class)))
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER') or @permissaoService.podeAcessarEvento(#id)")
     @GetMapping("/{id}")
-    public ResponseEntity<EventoResponse> findById(@PathVariable @Positive Long id){
+    public ResponseEntity<EventoResponse> findById(@Parameter(description = "ID do evento.") @PathVariable @Positive Long id){
         Evento evento = this.eventoService.findById(id);
 
         return ResponseEntity.ok(EventoMapper.toResponse(evento));
     }
 
+    @Operation(summary = "Atualiza evento")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Sucesso.", useReturnTypeSchema = true,
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Dados ou parâmetros inválidos.",
+                content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ErrorCustomResponse.class, ValidationErrorResponse.class}))),
+        @ApiResponse(responseCode = "403", description = "Usuário sem permissão.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Autenticação ausente ou inválida.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Registro não encontrado.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "409", description = "Conflito com os dados ou com o estado atual.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "500", description = "Erro interno.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class)))
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<EventoResponse> update(@PathVariable @Positive Long id,
+    public ResponseEntity<EventoResponse> update(@Parameter(description = "ID do evento.") @PathVariable @Positive Long id,
                                                  @RequestBody @Valid EventoRequest eventoRequest) {
         Evento evento = this.eventoService.findById(id);
         evento.setValor(eventoRequest.valor());
@@ -80,20 +153,71 @@ public class EventoController {
         return ResponseEntity.ok(EventoMapper.toResponse(updated));
     }
 
+    @Operation(summary = "Consulta evento com alertas")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Sucesso.", useReturnTypeSchema = true,
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Dados ou parâmetros inválidos.",
+                content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ErrorCustomResponse.class, ValidationErrorResponse.class}))),
+        @ApiResponse(responseCode = "403", description = "Usuário sem permissão.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Autenticação ausente ou inválida.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Registro não encontrado.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "500", description = "Erro interno.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class)))
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER') or @permissaoService.podeAcessarEvento(#id)")
     @GetMapping("/{id}/withAlertas")
-    public ResponseEntity<EventoWithAlertasResponse> findWithAlertasById(@PathVariable @Positive Long id){
+    public ResponseEntity<EventoWithAlertasResponse> findWithAlertasById(@Parameter(description = "ID do evento.") @PathVariable @Positive Long id){
         Evento evento = this.eventoService.findWithAlertasById(id);
         return ResponseEntity.ok(EventoMapper.toResponseWithAlertas(evento));
     }
 
+    @Operation(summary = "Exclui evento")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Excluído.", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Dados ou parâmetros inválidos.",
+                content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ErrorCustomResponse.class, ValidationErrorResponse.class}))),
+        @ApiResponse(responseCode = "403", description = "Usuário sem permissão.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Autenticação ausente ou inválida.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Registro não encontrado.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "409", description = "Conflito com os dados ou com o estado atual.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "500", description = "Erro interno.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class)))
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable @Positive Long id){
+    public ResponseEntity<Void> delete(@Parameter(description = "ID do evento.") @PathVariable @Positive Long id){
         this.eventoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Cria alerta do evento", description = "Seleciona o primeiro contato do idoso.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Criado.", useReturnTypeSchema = true,
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Dados ou parâmetros inválidos.",
+                content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {ErrorCustomResponse.class, ValidationErrorResponse.class}))),
+        @ApiResponse(responseCode = "403", description = "Usuário sem permissão.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Autenticação ausente ou inválida.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Registro não encontrado.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "409", description = "Conflito com os dados ou com o estado atual.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class))),
+        @ApiResponse(responseCode = "500", description = "Erro interno.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorCustomResponse.class)))
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @PostMapping("/{id}/alerta")
-    public ResponseEntity<AlertaResponse> saveAlerta(@PathVariable @Positive Long id,
+    public ResponseEntity<AlertaResponse> saveAlerta(@Parameter(description = "ID do evento.") @PathVariable @Positive Long id,
                                                      @RequestBody @Valid AlertaRequest alertaRequest){
         Alerta alerta = new Alerta();
 

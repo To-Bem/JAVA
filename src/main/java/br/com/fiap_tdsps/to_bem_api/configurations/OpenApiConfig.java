@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "bearerAuth"),
         info = @Info(
-                title = "To bem API",
+                title = "Tô Bem API",
                 version = "1.0",
-                description = "Api para gerenciar os sensores e alertas do projeto To Bem"
+                description = "Monitora idosos, dispositivos, rotinas e alertas. Obtenha o JWT no login e informe-o em Authorize."
         )
 )
 @SecurityScheme(

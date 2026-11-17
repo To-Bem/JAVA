@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface IdosoRepository extends JpaRepository<Idoso, Long> {
 
-    Optional<Idoso> findWithAllById(Long id);
-
     @EntityGraph(attributePaths = "contatos")
     Optional<Idoso> findWithContatosById(Long id);
 
