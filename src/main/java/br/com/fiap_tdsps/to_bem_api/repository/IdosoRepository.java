@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface IdosoRepository extends JpaRepository<Idoso, Long> {
 
-    @EntityGraph(attributePaths = {"contatos","alertas","rotinas","dispositivos"})
     Optional<Idoso> findWithAllById(Long id);
 
     @EntityGraph(attributePaths = "contatos")
@@ -20,5 +19,6 @@ public interface IdosoRepository extends JpaRepository<Idoso, Long> {
     @EntityGraph(attributePaths = "rotinas")
     Optional<Idoso> findWithRotinasById(Long id);
 
+    @EntityGraph(attributePaths = "dispositivos")
     Optional<Idoso> findWithDispositivosById(Long id);
 }

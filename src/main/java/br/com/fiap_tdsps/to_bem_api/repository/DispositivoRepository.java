@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface DispositivoRepository extends JpaRepository<Dispositivo, Long> {
+public interface DispositivoRepository extends JpaRepository<Dispositivo, Long>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<Dispositivo> {
 
     Page<Dispositivo> findByIdosoId(Long idosoId, Pageable pageable);
 

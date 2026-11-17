@@ -1,5 +1,7 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import org.springframework.data.domain.Pageable;
+
 import br.com.fiap_tdsps.to_bem_api.model.Usuario;
 import br.com.fiap_tdsps.to_bem_api.model.UsuarioPapel;
 import org.springframework.data.domain.Page;
@@ -23,4 +25,7 @@ public interface UsuarioService {
     Usuario findWithContatosById(Long id);
 
     Usuario findWithAllById(Long id);
+
+    Page<Usuario> findAll(Pageable pageable);
+    Page<Usuario> findByPapel(UsuarioPapel papel, Pageable pageable);
 }

@@ -4,8 +4,7 @@ import br.com.fiap_tdsps.to_bem_api.model.AlertaNivel;
 import br.com.fiap_tdsps.to_bem_api.model.AlertaStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.Positive;
 
 public record AlertaRequest(
         @NotBlank(message = "O tipo não pode ser vazio")
@@ -16,6 +15,7 @@ public record AlertaRequest(
         @NotNull(message = "O status é obrigatio")
         AlertaStatus status,
         @NotNull(message = "O nivel de escalonamento é obrigatorio")
+        @Positive(message = "O nivel deve ser positivo")
         Integer nivelEscalonamento
 ) {
 }

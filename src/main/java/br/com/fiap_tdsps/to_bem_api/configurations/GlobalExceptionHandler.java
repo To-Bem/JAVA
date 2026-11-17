@@ -11,9 +11,11 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.stream.Stream;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorCustomResponse> handleException(ResourceNotFoundException ex){
@@ -51,8 +54,8 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, message);
     }
 
-    @ExceptionHandler(MoreThanOneFilter.class)
-    public ResponseEntity<ErrorCustomResponse> handleMoreThanOneFilter(MoreThanOneFilter ex){
+    @ExceptionHandler(UnknownFilter.class)
+    public ResponseEntity<ErrorCustomResponse> handleMoreThanOneFilter(UnknownFilter ex){
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
@@ -88,8 +91,34 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Corpo da requisição inválido ou malformado");
     }
 
+    @ExceptionHandler(RoleNotPermitted.class)
+    public ResponseEntity<ErrorCustomResponse> handleRoleNotPermitted(RoleNotPermitted ex){
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorCustomResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex){
+        return build(HttpStatus.BAD_REQUEST, "O parâmetro obrigatório '" + ex.getParameterName() + "' não foi informado.");
+    }
+    @ExceptionHandler(ResourceNotCreated.class)
+    public ResponseEntity<ErrorCustomResponse> handleEntityNotCreated(ResourceNotCreated ex){
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
+    @ExceptionHandler(org.springframework.web.server.ResponseStatusException.class)
+    public ResponseEntity<ErrorCustomResponse> handleResponseStatus(org.springframework.web.server.ResponseStatusException ex) {
+        return build(HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason());
+    }
+
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorCustomResponse> handleIntegridade(org.springframework.dao.DataIntegrityViolationException ex) {
+        log.warn("Violacao de integridade no banco", ex);
+        return build(HttpStatus.CONFLICT, "Dados duplicados, obrigatorios ausentes ou registro vinculado a outro recurso.");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorCustomResponse> handleGeneric(Exception ex) {
+        log.error("Erro inesperado ao processar requisicao", ex);
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno inesperado");
     }
 
@@ -99,4 +128,3 @@ public class GlobalExceptionHandler {
                 .body(new ErrorCustomResponse(LocalDateTime.now(), status.value(), status.getReasonPhrase(), message));
     }
 }
-

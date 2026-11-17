@@ -1,5 +1,9 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import org.springframework.data.domain.Sort;
+
+import org.springframework.data.domain.PageRequest;
+
 import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotFoundException;
 import br.com.fiap_tdsps.to_bem_api.model.Rotina;
 import br.com.fiap_tdsps.to_bem_api.repository.RotinaRepository;
@@ -22,7 +26,7 @@ public class RotinaServiceImpl implements RotinaService{
     }
 
     @Override
-    public void delte(Long id) {
+    public void delete(Long id) {
         this.repository.delete(findById(id));
     }
 
@@ -34,7 +38,12 @@ public class RotinaServiceImpl implements RotinaService{
 
     @Override
     public Page<Rotina> findAll(Integer page, Integer size) {
-        return this.repository.findAll(Pageable.ofSize(size).withPage(page));
+        return this.findAll(PageRequest.of(page, size, Sort.by("id")));
+    }
+
+    @Override
+    public Page<Rotina> findAll(Pageable pageable) {
+        return this.repository.findAll(pageable);
     }
 
     @Override
@@ -44,6 +53,11 @@ public class RotinaServiceImpl implements RotinaService{
 
     @Override
     public Page<Rotina> findByIdosoId(Long idosoId, Integer page, Integer size) {
-        return this.repository.findByIdosoId(idosoId,Pageable.ofSize(size).withPage(page));
+        return this.findByIdosoId(idosoId, PageRequest.of(page, size, Sort.by("id")));
+    }
+
+    @Override
+    public Page<Rotina> findByIdosoId(Long idosoId, Pageable pageable) {
+        return this.repository.findByIdosoId(idosoId,pageable);
     }
 }

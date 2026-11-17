@@ -24,4 +24,7 @@ public class Evento {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dispositivo_id")
     private Dispositivo dispositivo;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "evento",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Alerta> alertas;
 }

@@ -21,6 +21,8 @@ public class Alerta {
     private AlertaStatus status;
     private Integer nivelEscalonamento;
     private String criadoEm;
+    private LocalDateTime enviadoEm;
+    private LocalDateTime prazoRespostaEm;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")

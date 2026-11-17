@@ -1,5 +1,9 @@
 package br.com.fiap_tdsps.to_bem_api.controller;
 
+import br.com.fiap_tdsps.to_bem_api.service.Paginacao;
+
+import org.springframework.data.domain.Sort;
+
 import br.com.fiap_tdsps.to_bem_api.dto.*;
 import br.com.fiap_tdsps.to_bem_api.mapper.AlertaMapper;
 import br.com.fiap_tdsps.to_bem_api.mapper.EventoMapper;
@@ -39,8 +43,10 @@ public class EventoController {
 
     @GetMapping
     public PageResponse<EventoResponse> findAll(@RequestParam(required = false,defaultValue = "0") @PositiveOrZero Integer page,
-                                                @RequestParam(required = false,defaultValue = "10") @Positive Integer size){
-        Page<Evento> pageResult = this.eventoService.findAll(page,size);
+                                                @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction){
+        Page<Evento> pageResult = this.eventoService.findAll(Paginacao.criar(page, size, sort, direction, Evento.class));
         return PageResponse.from(pageResult.map(EventoMapper::toResponse));
     }
 
@@ -48,10 +54,11 @@ public class EventoController {
     public PageResponse<EventoResponse> findByOtherFilter(@RequestParam @Positive Long dispositivoId,
                                                           @RequestParam(required = false) String tipo,
                                                           @RequestParam(required = false,defaultValue = "0") @PositiveOrZero Integer page,
-                                                          @RequestParam(required = false,defaultValue = "10") @Positive Integer size){
-        Page<Evento> pageResult = tipo != null ?
-                this.eventoService.findByTipoAndDispositivoId(tipo,dispositivoId,page,size) :
-                this.eventoService.findByDispositivoId(dispositivoId,page,size);
+                                                          @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction){
+        Page<Evento> pageResult = this.eventoService.findByOtherFilter(dispositivoId, tipo,
+                Paginacao.criar(page, size, sort, direction, Evento.class));
         return  PageResponse.from(pageResult.map(EventoMapper::toResponse));
     }
 
@@ -64,7 +71,7 @@ public class EventoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<EventoResponse> update(@PathVariable @Positive Long id,
-                                                 @RequestBody EventoRequest eventoRequest) {
+                                                 @RequestBody @Valid EventoRequest eventoRequest) {
         Evento evento = this.eventoService.findById(id);
         evento.setValor(eventoRequest.valor());
         evento.setTipo(eventoRequest.tipo());
@@ -73,10 +80,16 @@ public class EventoController {
         return ResponseEntity.ok(EventoMapper.toResponse(updated));
     }
 
+    @GetMapping("/{id}/withAlertas")
+    public ResponseEntity<EventoWithAlertasResponse> findWithAlertasById(@PathVariable @Positive Long id){
+        Evento evento = this.eventoService.findWithAlertasById(id);
+        return ResponseEntity.ok(EventoMapper.toResponseWithAlertas(evento));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @Positive Long id){
         this.eventoService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/alerta")
@@ -99,6 +112,7 @@ public class EventoController {
 
         alerta.setIdoso(idoso);
         alerta.setUsuario(contato.getUsuario());
+        alerta.setNivelEscalonamento(contato.getOrdemEscalonamento());
 
         Alerta save = this.alertaService.save(alerta);
         return ResponseEntity.created(URI.create("/api/alertas/" + save.getId())).body(AlertaMapper.toResponse(save));

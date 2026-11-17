@@ -7,11 +7,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ContatoRepository extends JpaRepository<Contato, Long> {
+public interface ContatoRepository extends JpaRepository<Contato, Long>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<Contato> {
 
-    Optional<Contato> findByIdosoId(Long idosoId);
+    boolean existsByIdosoIdAndOrdemEscalonamentoAndIdNot(Long idosoId, Integer ordemEscalonamento, Long id);
 
-    Optional<Contato> findByUsuarioId(Long usuarioId);
+    boolean existsByIdosoIdAndOrdemEscalonamento(Long idosoId, Integer ordemEscalonamento);
+
+    Page<Contato> findByIdosoId(Long idosoId, Pageable pageable);
+
+    Page<Contato> findByUsuarioId(Long usuarioId, Pageable pageable);
 
     Optional<Contato> findFirstByIdosoIdOrderByOrdemEscalonamentoAsc(Long idosoId);
+
+    Optional<Contato> findFirstByIdosoIdAndOrdemEscalonamentoGreaterThanOrderByOrdemEscalonamentoAsc(Long idosoId,Integer ordemAtual);
 }

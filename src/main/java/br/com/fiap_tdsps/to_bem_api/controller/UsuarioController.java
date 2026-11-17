@@ -1,12 +1,15 @@
 package br.com.fiap_tdsps.to_bem_api.controller;
 
+import br.com.fiap_tdsps.to_bem_api.service.Paginacao;
+
+import org.springframework.data.domain.Sort;
+
 import br.com.fiap_tdsps.to_bem_api.dto.*;
+import br.com.fiap_tdsps.to_bem_api.exceptions.ResourceNotCreated;
+import br.com.fiap_tdsps.to_bem_api.exceptions.RoleNotPermitted;
 import br.com.fiap_tdsps.to_bem_api.mapper.IdosoMapper;
 import br.com.fiap_tdsps.to_bem_api.mapper.UsuarioMapper;
-import br.com.fiap_tdsps.to_bem_api.model.CommonVariables;
-import br.com.fiap_tdsps.to_bem_api.model.Contato;
-import br.com.fiap_tdsps.to_bem_api.model.Idoso;
-import br.com.fiap_tdsps.to_bem_api.model.Usuario;
+import br.com.fiap_tdsps.to_bem_api.model.*;
 import br.com.fiap_tdsps.to_bem_api.service.ContatoService;
 import br.com.fiap_tdsps.to_bem_api.service.IdosoService;
 import br.com.fiap_tdsps.to_bem_api.service.UsuarioService;
@@ -19,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -43,17 +47,22 @@ public class UsuarioController {
         usuario.setEmail(request.email());
         usuario.setNome(request.nome());
         usuario.setSenha(request.senha());
+       if(request.papel() == UsuarioPapel.ADMIN) {
+           throw new RoleNotPermitted("Usuario", "ADMIN");
+       }
         usuario.setPapel(request.papel());
 
         Usuario save = this.usuarioService.save(usuario);
 
-        return ResponseEntity.created(URI.create("api/usuarios/" + save.getId())).body(UsuarioMapper.toResponse(save));
+        return ResponseEntity.created(URI.create("/api/usuarios/" + save.getId())).body(UsuarioMapper.toResponse(save));
     }
 
     @GetMapping
     public PageResponse<UsuarioResponse> findAll(@RequestParam(required = false, defaultValue = "0") @PositiveOrZero Integer page,
-                                                 @RequestParam(required = false,defaultValue = "10") @Positive Integer size){
-        Page<Usuario> pageResult = this.usuarioService.findAll(page,size);
+                                                 @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction){
+        Page<Usuario> pageResult = this.usuarioService.findAll(Paginacao.criar(page, size, sort, direction, Usuario.class));
 
         return PageResponse.from(pageResult.map(UsuarioMapper::toResponse));
     }
@@ -72,7 +81,12 @@ public class UsuarioController {
         usuario.setEmail(request.email());
         usuario.setNome(request.nome());
         usuario.setSenha(request.senha());
-        usuario.setPapel(request.papel());
+        if(request.papel() != UsuarioPapel.ADMIN) {
+            usuario.setPapel(request.papel());
+        }
+        else {
+            throw new RoleNotPermitted("Usuario", "ADMIN");
+        }
 
         Usuario updated = this.usuarioService.update(id,usuario);
         return ResponseEntity.ok(UsuarioMapper.toResponse(updated));
@@ -81,7 +95,7 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @Positive Long id){
         this.usuarioService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{usuarioId}/idoso")
@@ -89,24 +103,17 @@ public class UsuarioController {
                                                    @RequestBody @Valid IdosoRequest idosoRequest,
                                                    @RequestParam String parentesco,
                                                    @RequestParam @Positive Integer ordemEscalonamento){
+        this.usuarioService.findById(usuarioId);
         Idoso idoso = new Idoso();
-
-        idoso.setModo(idosoRequest.modo());
-        idoso.setEndereco(idosoRequest.endereco());
-        idoso.setTelefone(idosoRequest.telefone());
         idoso.setNome(idosoRequest.nome());
-        idoso.setDataNascimento(idosoRequest.dataNascimento().format(CommonVariables.dateFormatter));
+        idoso.setDataNascimento(
+                idosoRequest.dataNascimento().format(CommonVariables.dateFormatter)
+        );
+        idoso.setTelefone(idosoRequest.telefone());
+        idoso.setEndereco(idosoRequest.endereco());
+        idoso.setModo(idosoRequest.modo());
 
-        Idoso save = this.idosoService.save(idoso);
-
-        Contato contato = new Contato();
-
-        contato.setParentesco(parentesco);
-        contato.setOrdemEscalonamento(ordemEscalonamento);
-        contato.setIdoso(save);
-        contato.setUsuario(this.usuarioService.findById(usuarioId));
-
-        this.contatoService.save(contato);
+        Idoso save = this.idosoService.cadastrarComContato(usuarioId,idoso,parentesco,ordemEscalonamento);
 
         return ResponseEntity.created(URI.create("/api/idosos/" + save.getId())).body(IdosoMapper.toResponse(idoso));
     }

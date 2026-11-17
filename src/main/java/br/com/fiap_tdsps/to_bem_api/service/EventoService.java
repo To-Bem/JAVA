@@ -1,5 +1,7 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import org.springframework.data.domain.Pageable;
+
 import br.com.fiap_tdsps.to_bem_api.model.Evento;
 import org.springframework.data.domain.Page;
 
@@ -20,4 +22,10 @@ public interface EventoService {
 
     Page<Evento> findByTipoAndDispositivoId(String tipo, Long dispositivoId, Integer page, Integer size);
 
+    Evento findWithAlertasById(Long id);
+
+    Page<Evento> findAll(Pageable pageable);
+    Page<Evento> findByDispositivoId(Long dispositivoId, Pageable pageable);
+    Page<Evento> findByTipoAndDispositivoId(String tipo,Long dispositivoId, Pageable pageable);
+    Page<Evento> findByOtherFilter(Long dispositivoId, String tipo, Pageable pageable);
 }

@@ -1,5 +1,9 @@
 package br.com.fiap_tdsps.to_bem_api.controller;
 
+import br.com.fiap_tdsps.to_bem_api.service.Paginacao;
+
+import org.springframework.data.domain.Sort;
+
 import br.com.fiap_tdsps.to_bem_api.dto.*;
 import br.com.fiap_tdsps.to_bem_api.mapper.DispositivoMapper;
 import br.com.fiap_tdsps.to_bem_api.mapper.IdosoMapper;
@@ -41,9 +45,11 @@ public class IdosoController {
 
     @GetMapping
     public PageResponse<IdosoResponse> findAll(@RequestParam(required = false, defaultValue = "0") @PositiveOrZero Integer page,
-                                               @RequestParam(required = false,defaultValue = "10") @Positive Integer size){
+                                               @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction){
 
-        Page<Idoso> pageResult = this.idosoService.findAll(page,size);
+        Page<Idoso> pageResult = this.idosoService.findAll(Paginacao.criar(page, size, sort, direction, Idoso.class));
         return PageResponse.from(pageResult.map(IdosoMapper::toResponse));
     }
 
@@ -59,7 +65,7 @@ public class IdosoController {
         Idoso idoso = this.idosoService.findById(id);
 
         idoso.setNome( idosoRequest.nome());
-        idoso.setDataNascimento(idosoRequest.dataNascimento().format(CommonVariables.dateTimeFormatter));
+        idoso.setDataNascimento(idosoRequest.dataNascimento().format(CommonVariables.dateFormatter));
         idoso.setTelefone(idosoRequest.telefone());
         idoso.setEndereco(idosoRequest.endereco());
         idoso.setModo(idosoRequest.modo());
@@ -71,7 +77,7 @@ public class IdosoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @Positive Long id){
         this.idosoService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{idosoId}/rotina")
@@ -85,7 +91,7 @@ public class IdosoController {
         rotina.setIdoso(this.idosoService.findById(idosoId));
 
         Rotina save = this.rotinaService.save(rotina);
-        return ResponseEntity.created(URI.create("api/rotinas/" + save.getId())).body(RotinaMapper.toResponse(save));
+        return ResponseEntity.created(URI.create("/api/rotinas/" + save.getId())).body(RotinaMapper.toResponse(save));
     }
 
     @PostMapping("/{idosoId}/dispositivo")

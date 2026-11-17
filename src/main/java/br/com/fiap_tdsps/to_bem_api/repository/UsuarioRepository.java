@@ -11,6 +11,10 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
+    boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
+
+    boolean existsByEmailIgnoreCase(String email);
+
     Page<Usuario> findByPapel(UsuarioPapel papel, Pageable pageable);
 
     @EntityGraph(attributePaths = "alertas")
@@ -19,6 +23,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @EntityGraph(attributePaths = "contatos")
     Optional<Usuario> findWithContatosById(Long id);
 
-    @EntityGraph(attributePaths = {"contatos","alertas"})
     Optional<Usuario> findWithAllById(Long id);
 }

@@ -1,7 +1,10 @@
 package br.com.fiap_tdsps.to_bem_api.controller;
 
+import br.com.fiap_tdsps.to_bem_api.service.Paginacao;
+
+import org.springframework.data.domain.Sort;
+
 import br.com.fiap_tdsps.to_bem_api.dto.*;
-import br.com.fiap_tdsps.to_bem_api.exceptions.MoreThanOneFilter;
 import br.com.fiap_tdsps.to_bem_api.mapper.DispositivoMapper;
 import br.com.fiap_tdsps.to_bem_api.mapper.EventoMapper;
 import br.com.fiap_tdsps.to_bem_api.model.*;
@@ -16,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/dispositivos")
@@ -32,8 +36,10 @@ public class DispositivoController {
 
     @GetMapping
     public PageResponse<DispositivoResponse> findAll(@RequestParam(required = false, defaultValue = "0") @PositiveOrZero Integer page,
-                                                    @RequestParam(required = false,defaultValue = "10") @Positive Integer size){
-        Page<Dispositivo> pageResult = this.dispositivoService.findAll(page,size);
+                                                     @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction){
+        Page<Dispositivo> pageResult = this.dispositivoService.findAll(Paginacao.criar(page, size, sort, direction, Dispositivo.class));
         return PageResponse.from(pageResult.map(DispositivoMapper::toResponse));
     }
 
@@ -44,51 +50,42 @@ public class DispositivoController {
     }
 
     @GetMapping("/byOtherFilter")
-    public PageResponse<DispositivoResponse> findByOtherFilter(@Positive Long idosoId,
+    public PageResponse<DispositivoResponse> findByOtherFilter(@RequestParam @Positive Long idosoId,
                                                                @RequestParam(required = false) DispositivoTipo tipo,
                                                                @RequestParam(required = false) String comodo,
                                                                @RequestParam(required = false) DispositivoStatus status,
                                                                @RequestParam(required = false,defaultValue = "0") @PositiveOrZero Integer page,
-                                                               @RequestParam(required = false,defaultValue = "10") @Positive Integer size){
-        Page<Dispositivo> pageResult;
-
-        if (tipo != null && comodo == null && status == null) {
-            pageResult = this.dispositivoService.findByTipoAndIdosoId(tipo, idosoId, page, size);
-
-        } else if (tipo == null && comodo != null && status == null) {
-            pageResult = this.dispositivoService.findByComodoAndIdosoId(comodo, idosoId, page, size);
-
-        } else if (tipo == null && comodo == null && status != null) {
-            pageResult = this.dispositivoService.findByStatusAndIdosoId(status, idosoId, page, size);
-
-        } else if (tipo == null && comodo == null && status == null) {
-            pageResult = this.dispositivoService.findByIdosoId(idosoId, page, size);
-
-        } else {
-            throw new MoreThanOneFilter();
-        }
-
+                                                               @RequestParam(required = false,defaultValue = "10") @Positive Integer size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction){
+        Page<Dispositivo> pageResult = this.dispositivoService.findByOtherFilter(idosoId, tipo, comodo, status,
+                Paginacao.criar(page, size, sort, direction, Dispositivo.class));
         return PageResponse.from(pageResult.map(DispositivoMapper::toResponse));
     }
 
     @PutMapping("/{id}")
     public  ResponseEntity<DispositivoResponse> update(@PathVariable @Positive Long id,
-                                               @RequestBody DispositivoRequest dispositivoRequest){
+                                                       @RequestBody @Valid DispositivoRequest dispositivoRequest){
         Dispositivo dispositivo = this.dispositivoService.findById(id);
 
         dispositivo.setTipo(dispositivoRequest.tipo());
         dispositivo.setComodo(dispositivoRequest.comodo());
         dispositivo.setStatus(dispositivoRequest.status());
-        dispositivo.setUltimoHeartbeat(dispositivoRequest.ultimoHeartbeat().format(CommonVariables.dateTimeFormatter));
 
         Dispositivo updated = this.dispositivoService.update(id,dispositivo);
+        return ResponseEntity.ok(DispositivoMapper.toResponse(updated));
+    }
+
+    @PostMapping("/{id}/heartbeat")
+    public ResponseEntity<DispositivoResponse> updateHeartBeatById(@PathVariable @Positive Long id){
+        Dispositivo updated =this.dispositivoService.updateHeartBeatById(id, LocalDateTime.now().format(CommonVariables.dateTimeFormatter));
         return ResponseEntity.ok(DispositivoMapper.toResponse(updated));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @Positive Long id){
         this.dispositivoService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/evento")

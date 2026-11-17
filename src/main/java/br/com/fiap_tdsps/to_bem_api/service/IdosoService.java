@@ -1,5 +1,8 @@
 package br.com.fiap_tdsps.to_bem_api.service;
 
+import org.springframework.data.domain.Pageable;
+
+import br.com.fiap_tdsps.to_bem_api.dto.IdosoRequest;
 import br.com.fiap_tdsps.to_bem_api.model.Idoso;
 import org.springframework.data.domain.Page;
 
@@ -26,4 +29,8 @@ public interface IdosoService {
     Idoso findWithRotinasById(Long id);
 
     Idoso findWithDispositivosById(Long id);
+
+    public Idoso cadastrarComContato(Long usuarioId, Idoso idoso, String parentesco, Integer ordemEscalonamento);
+
+    Page<Idoso> findAll(Pageable pageable);
 }

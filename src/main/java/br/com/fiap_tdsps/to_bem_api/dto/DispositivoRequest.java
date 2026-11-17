@@ -14,7 +14,6 @@ public record DispositivoRequest(
         @NotBlank(message = "comodo não pode ser vazio")
         String comodo,
         @NotNull(message = "status é obrigatorio")
-        DispositivoStatus status,
-        LocalDateTime ultimoHeartbeat
+        DispositivoStatus status
 ) {
 }

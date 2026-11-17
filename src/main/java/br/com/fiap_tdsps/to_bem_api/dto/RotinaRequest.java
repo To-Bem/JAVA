@@ -2,6 +2,7 @@ package br.com.fiap_tdsps.to_bem_api.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalTime;
 
@@ -12,6 +13,7 @@ public record RotinaRequest(
         @NotNull(message = "horaPrimeiraAtividade é obrigatorio")
         LocalTime horaPrimeiraAtividade,
         @NotNull(message = "mediaLevantadasPorNoite é obrigatorio")
+        @PositiveOrZero(message = "A media nao pode ser negativa")
         Integer mediaLevantadasPorNoite
 ) {
 }
