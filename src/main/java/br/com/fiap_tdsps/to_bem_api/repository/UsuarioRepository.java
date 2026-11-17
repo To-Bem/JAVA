@@ -24,4 +24,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findWithContatosById(Long id);
 
     Optional<Usuario> findWithAllById(Long id);
+
+    boolean existsByEmail(String adminEmail);
+
+    Optional<Usuario> findByEmailIgnoreCase(String email);
 }

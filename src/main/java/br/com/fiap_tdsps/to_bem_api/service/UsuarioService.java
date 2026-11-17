@@ -28,4 +28,11 @@ public interface UsuarioService {
 
     Page<Usuario> findAll(Pageable pageable);
     Page<Usuario> findByPapel(UsuarioPapel papel, Pageable pageable);
+
+    boolean existsByEmail(String email);
+
+    Usuario register(String name, String email, String rawPassword);
+
+    Usuario registerPrivilegiado(String name, String email, String rawPassword,
+                                 UsuarioPapel papel, br.com.fiap_tdsps.to_bem_api.model.Role role);
 }

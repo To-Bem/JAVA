@@ -5,6 +5,7 @@ import br.com.fiap_tdsps.to_bem_api.dto.ErrorFieldCustom;
 import br.com.fiap_tdsps.to_bem_api.dto.ValidationErrorResponse;
 import br.com.fiap_tdsps.to_bem_api.exceptions.*;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -105,15 +106,25 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
-    @ExceptionHandler(org.springframework.web.server.ResponseStatusException.class)
-    public ResponseEntity<ErrorCustomResponse> handleResponseStatus(org.springframework.web.server.ResponseStatusException ex) {
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorCustomResponse> handleResponseStatus(ResponseStatusException ex) {
         return build(HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason());
     }
 
-    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorCustomResponse> handleIntegridade(org.springframework.dao.DataIntegrityViolationException ex) {
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorCustomResponse> handleIntegridade(DataIntegrityViolationException ex) {
         log.warn("Violacao de integridade no banco", ex);
         return build(HttpStatus.CONFLICT, "Dados duplicados, obrigatorios ausentes ou registro vinculado a outro recurso.");
+    }
+
+    @ExceptionHandler(EmailAlreadyRegisteredException.class)
+    public ResponseEntity<ErrorCustomResponse> handleEmailAlreadyRegistered(EmailAlreadyRegisteredException ex) {
+        return build(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorCustomResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

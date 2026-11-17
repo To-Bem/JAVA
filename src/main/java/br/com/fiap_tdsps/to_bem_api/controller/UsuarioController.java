@@ -31,25 +31,19 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
     private final IdosoService idosoService;
-    private final ContatoService contatoService;
 
-    public UsuarioController(UsuarioService usuarioService, IdosoService idosoService,
-                             ContatoService contatoService){
+    public UsuarioController(UsuarioService usuarioService, IdosoService idosoService){
         this.usuarioService = usuarioService;
-        this.contatoService = contatoService;
         this.idosoService = idosoService;
     }
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<UsuarioResponse> saveUsuario(@RequestBody @Valid UsuarioRequest request){
         Usuario usuario = new Usuario();
 
         usuario.setEmail(request.email());
         usuario.setNome(request.nome());
-        usuario.setSenha(request.senha());
-       if(request.papel() == UsuarioPapel.ADMIN) {
-           throw new RoleNotPermitted("Usuario", "ADMIN");
-       }
+        usuario.setPassword(request.senha());
         usuario.setPapel(request.papel());
 
         Usuario save = this.usuarioService.save(usuario);
@@ -80,13 +74,8 @@ public class UsuarioController {
 
         usuario.setEmail(request.email());
         usuario.setNome(request.nome());
-        usuario.setSenha(request.senha());
-        if(request.papel() != UsuarioPapel.ADMIN) {
-            usuario.setPapel(request.papel());
-        }
-        else {
-            throw new RoleNotPermitted("Usuario", "ADMIN");
-        }
+        usuario.setPassword(request.senha());
+        usuario.setPapel(request.papel());
 
         Usuario updated = this.usuarioService.update(id,usuario);
         return ResponseEntity.ok(UsuarioMapper.toResponse(updated));
