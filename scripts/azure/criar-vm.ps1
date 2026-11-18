@@ -4,11 +4,14 @@
 #
 # Depois de "az login", na raiz do repositório:
 #   .\scripts\azure\criar-vm.ps1
-#   .\scripts\azure\criar-vm.ps1 -Location brazilsouth -VmSize Standard_B2ms
+#   .\scripts\azure\criar-vm.ps1 -Location eastus2 -VmSize Standard_B2ms
+#
+# Azure for Students só aceita algumas regiões. Para ver as permitidas:
+#   az policy assignment list --query "[].parameters.listOfAllowedLocations.value" -o json
 # ---------------------------------------------------------------------------
 param(
     [string]$ResourceGroup = "rg-tobem-gs",
-    [string]$Location = "eastus",
+    [string]$Location = "brazilsouth",
     [string]$VmName = "vm-tobem",
     [string]$VmSize = "Standard_B2s",
     [string]$VmImage = "Ubuntu2204",

@@ -8,12 +8,15 @@
 #   bash scripts/azure/criar-vm.sh
 #
 # Dá para trocar qualquer valor por variável de ambiente, ex.:
-#   LOCATION=brazilsouth VM_SIZE=Standard_B2ms bash scripts/azure/criar-vm.sh
+#   LOCATION=eastus2 VM_SIZE=Standard_B2ms bash scripts/azure/criar-vm.sh
+#
+# Azure for Students só aceita algumas regiões. Para ver as permitidas:
+#   az policy assignment list --query "[].parameters.listOfAllowedLocations.value" -o json
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
 RESOURCE_GROUP="${RESOURCE_GROUP:-rg-tobem-gs}"
-LOCATION="${LOCATION:-eastus}"
+LOCATION="${LOCATION:-brazilsouth}"
 VM_NAME="${VM_NAME:-vm-tobem}"
 VM_SIZE="${VM_SIZE:-Standard_B2s}"        # 2 vCPU / 4 GB: Oracle Free + API
 VM_IMAGE="${VM_IMAGE:-Ubuntu2204}"        # Ubuntu Server 22.04 LTS
