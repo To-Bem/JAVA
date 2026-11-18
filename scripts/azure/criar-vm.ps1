@@ -4,7 +4,7 @@
 #
 # Depois de "az login", na raiz do repositório:
 #   .\scripts\azure\criar-vm.ps1
-#   .\scripts\azure\criar-vm.ps1 -Location eastus2 -VmSize Standard_D2as_v7
+#   .\scripts\azure\criar-vm.ps1 -Location brazilsouth -VmSize Standard_D2s_v4
 #
 # Azure for Students só aceita algumas regiões. Para ver as permitidas:
 #   az policy assignment list --query "[].parameters.listOfAllowedLocations.value" -o json
