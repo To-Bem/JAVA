@@ -26,7 +26,7 @@ O professor reproduz tudo seguindo os passos abaixo.
 
 ![Arquitetura do Tô Bem](docs/arquitetura.png)
 
-- **Azure:** grupo de recursos `rg-tobem-gs` com a VM `vm-tobem` (Ubuntu 22.04, Standard_B2s).
+- **Azure:** grupo de recursos `rg-tobem-gs`, região **Brazil South** (`brazilsouth`), com a VM `vm-tobem` (Ubuntu 22.04, Standard_D2s_v4: 2 vCPU, 8 GB).
   O NSG libera só a **22** (SSH) e a **8080** (API). A **1521** (Oracle) não fica exposta na internet.
 - **Docker Compose** sobe dois containers na rede `tobem-net`:
   - `tobem-api` — API REST em Spring Boot 4 / Java 21 (JWT, CRUD de usuários, idosos, contatos,
@@ -104,12 +104,12 @@ O script executa, nesta ordem, os comandos abaixo (valores padrão entre parênt
 
 ```bash
 # 1. Grupo de recursos
-az group create --name rg-tobem-gs --location eastus \
+az group create --name rg-tobem-gs --location brazilsouth \
   --tags projeto=tobem disciplina=devops gs=2026-2
 
 # 2. VM Ubuntu 22.04 com chave SSH
 az vm create --resource-group rg-tobem-gs --name vm-tobem \
-  --image Ubuntu2204 --size Standard_B2s --admin-username azureuser \
+  --image Ubuntu2204 --size Standard_D2s_v4 --admin-username azureuser \
   --generate-ssh-keys --public-ip-sku Standard --os-disk-size-gb 64
 
 # 3. Libera a porta da API no NSG (a 22 já vem liberada)
@@ -123,8 +123,12 @@ az vm run-command invoke --resource-group rg-tobem-gs --name vm-tobem \
 az vm show --resource-group rg-tobem-gs --name vm-tobem --show-details --query publicIps -o tsv
 ```
 
-> Para mudar região ou tamanho: `LOCATION=brazilsouth VM_SIZE=Standard_B2ms bash scripts/azure/criar-vm.sh`
-> (no PowerShell: `-Location brazilsouth -VmSize Standard_B2ms`).
+> A assinatura Azure for Students só aceita algumas regiões. Para ver as permitidas:
+> `az policy assignment list --query "[].parameters.listOfAllowedLocations.value" -o json`
+>
+> Para mudar região ou tamanho: `LOCATION=eastus2 VM_SIZE=Standard_D2as_v7 bash scripts/azure/criar-vm.sh`
+> (no PowerShell: `-Location eastus2 -VmSize Standard_D2as_v7`). Se o grupo já tiver sido criado em outra
+> região, apague antes: `az group delete -n rg-tobem-gs --yes`.
 
 #### 3. Entrar na VM e subir os containers
 
@@ -271,12 +275,18 @@ O `.env` não vai para o GitHub (`.gitignore`). Sem as variáveis de banco, a AP
 
 | Sintoma | Solução |
 |---|---|
-| `RequestDisallowedByPolicy` / região não permitida (Azure for Students) | Troque a região: `LOCATION=brazilsouth` ou `westus2`... Veja as permitidas em *Policy* no portal |
-| `SkuNotAvailable` | Troque o tamanho: `VM_SIZE=Standard_B2ms` ou `Standard_D2s_v3` |
+| `RequestDisallowedByAzure` / `RequestDisallowedByPolicy` (região não permitida no Azure for Students) | Liste as regiões permitidas com `az policy assignment list --query "[].parameters.listOfAllowedLocations.value" -o json`, apague o grupo (`az group delete -n rg-tobem-gs --yes`) e rode o script com `-Location <região>` |
+| `SkuNotAvailable` (sem capacidade para o tamanho na região) | Liste os tamanhos liberados (comando logo abaixo da tabela) e rode o script com `-VmSize <tamanho>`, com no mínimo 4 GB de RAM. A série B estava esgotada no Brazil South, por isso usamos a `Standard_D2s_v4` |
 | `permission denied` no docker | Saia e entre de novo no SSH (o grupo `docker` vale a partir do novo login) |
 | `tobem-api` reiniciando no começo | Normal na 1ª subida enquanto o Oracle cria o esquema; aguarde e veja `docker compose logs api` |
 | `$'\r': command not found` nos scripts | O arquivo foi salvo com quebra de linha do Windows. O `.gitattributes` força LF; clone de novo ou rode `sed -i 's/\r$//' scripts/*/*.sh` |
 | Swagger não abre de fora | Confira se a porta 8080 foi liberada (`az vm open-port`) e se `docker compose ps` mostra `0.0.0.0:8080->8080` |
+
+Tamanhos de VM liberados para a assinatura na região:
+
+```powershell
+az vm list-skus -l brazilsouth --resource-type virtualMachines --query "[?length(restrictions)==``0`` && starts_with(name,'Standard_D2')].name" -o tsv
+```
 
 ---
 

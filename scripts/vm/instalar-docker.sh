@@ -36,7 +36,7 @@ systemctl enable --now docker
 echo "==> Usuário $USUARIO_VM no grupo docker (docker sem sudo)"
 usermod -aG docker "$USUARIO_VM"
 
-echo "==> Swap de 2 GB (folga de memória para o Oracle na VM de 4 GB)"
+echo "==> Swap de 2 GB (folga de memória para o Oracle)"
 if [ ! -f /swapfile ]; then
   fallocate -l 2G /swapfile
   chmod 600 /swapfile

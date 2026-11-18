@@ -56,7 +56,7 @@
   <!-- ===== Azure ===== -->
   <rect x="380" y="100" width="1195" height="880" rx="14" fill="#f5f9ff" stroke="#0b6bcb" stroke-width="2.5"/>
   <text x="400" y="130" font-size="18" font-weight="bold" fill="#0b6bcb">Microsoft Azure</text>
-  <text x="585" y="130" font-size="14" fill="#1e3a8a">grupo de recursos rg-tobem-gs · região eastus</text>
+  <text x="585" y="130" font-size="14" fill="#1e3a8a">grupo de recursos rg-tobem-gs · região Brazil South (brazilsouth)</text>
 
   <!-- NSG -->
   <rect x="395" y="150" width="34" height="810" rx="6" fill="#dbeafe" stroke="#0b6bcb" stroke-width="1.5"/>
@@ -66,7 +66,7 @@
   <!-- VM -->
   <rect x="450" y="150" width="1105" height="810" rx="12" fill="#ffffff" stroke="#1e3a8a" stroke-width="2"/>
   <text x="470" y="180" font-size="17" font-weight="bold" fill="#1e3a8a">VM vm-tobem</text>
-  <text x="625" y="180" font-size="14" fill="#334155">Ubuntu Server 22.04 LTS · Standard_B2s (2 vCPU, 4 GB) · IP público · disco 64 GB</text>
+  <text x="625" y="180" font-size="14" fill="#334155">Ubuntu Server 22.04 LTS · Standard_D2s_v4 (2 vCPU, 8 GB) · IP público · disco 64 GB</text>
 
   <!-- Docker -->
   <rect x="470" y="200" width="1065" height="740" rx="10" fill="#f8fafc" stroke="#2496ed" stroke-width="2"/>
