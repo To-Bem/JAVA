@@ -1,0 +1,71 @@
+# ---------------------------------------------------------------------------
+# Tô Bem — ambiente completo: API Java + banco Oracle, cada um no seu container.
+#
+# Subir (em background):   docker compose up -d --build
+# Ver situação:            docker compose ps
+# Logs:                    docker compose logs -f api
+# Parar (mantém os dados): docker compose down
+#
+# Os valores ${...} vêm do arquivo .env (copie de .env.example).
+# ---------------------------------------------------------------------------
+name: tobem
+
+services:
+  # ===== Banco de dados: Oracle Database 23ai Free =====
+  oracle:
+    image: gvenzl/oracle-free:23-slim
+    container_name: tobem-oracle
+    restart: unless-stopped
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD}       # senha dos usuários SYS/SYSTEM
+      APP_USER: ${DB_USER}                      # esquema da aplicação (criado no 1º start)
+      APP_USER_PASSWORD: ${DB_PASSWORD}
+      TZ: America/Sao_Paulo
+    ports:
+      - "${DB_PORT:-1521}:1521"
+    volumes:
+      - tobem-oracle-data:/opt/oracle/oradata   # volume nomeado: os dados sobrevivem ao container
+    networks:
+      - tobem-net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+
+  # ===== Aplicação: API Java (Spring Boot) =====
+  api:
+    build:
+      context: .                                # raiz do repositório (pom.xml + src/)
+      dockerfile: Dockerfile
+    image: tobem-api:1.0
+    container_name: tobem-api
+    restart: unless-stopped
+    depends_on:
+      oracle:
+        condition: service_healthy              # só sobe quando o Oracle estiver pronto
+    environment:
+      SERVER_PORT: 8080
+      DB_URL: jdbc:oracle:thin:@//oracle:1521/FREEPDB1   # "oracle" = nome do serviço na rede tobem-net
+      DB_USERNAME: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      H2_CONSOLE_ENABLED: "false"
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL:-true}
+      JAVA_TOOL_OPTIONS: -Xms256m -Xmx512m -Duser.timezone=America/Sao_Paulo
+    ports:
+      - "${API_PORT:-8080}:8080"
+    networks:
+      - tobem-net
+
+volumes:
+  tobem-oracle-data:
+    name: tobem-oracle-data
+
+networks:
+  tobem-net:
+    name: tobem-net
+    driver: bridge

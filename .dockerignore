@@ -1,0 +1,19 @@
+# Só o pom.xml e o src/ entram no build da imagem
+target/
+data/
+.idea/
+.vscode/
+*.iml
+*.log
+.git
+.gitignore
+.gitattributes
+.env
+.env.example
+docker-compose.yml
+Dockerfile
+.dockerignore
+scripts/
+docs/
+README.md
+LICENSE

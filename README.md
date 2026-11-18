@@ -8,13 +8,283 @@ API REST para monitoramento de idosos por dispositivos, registro de rotinas e ev
 - Lucas Shida Rodrigues da Costa — rm568194.
 - Pedro Henrique Pinheiro Falchi — rm566967
 - Pitch: **inserir link público do vídeo de até 5 minutos**.
+- Vídeo DevOps (YouTube, não listado, 720p+): **inserir link**.
 - Repositório: https://github.com/To-Bem/JAVA
+
+## Sumário
+
+- [DevOps — API e Oracle em containers numa VM Azure](#devops--api-e-oracle-em-containers-numa-vm-azure)
+- [Java — execução local, autenticação, permissões e modelagem](#tecnologias)
+
+## DevOps — API e Oracle em containers numa VM Azure
+
+Entrega de **DevOps Tools & Cloud Computing**: a API deste repositório e o banco **Oracle**
+rodam em containers Docker, dentro de uma **VM no Microsoft Azure criada por Azure CLI**.
+O professor reproduz tudo seguindo os passos abaixo.
+
+### Arquitetura macro
+
+![Arquitetura do Tô Bem](docs/arquitetura.png)
+
+- **Azure:** grupo de recursos `rg-tobem-gs` com a VM `vm-tobem` (Ubuntu 22.04, Standard_B2s).
+  O NSG libera só a **22** (SSH) e a **8080** (API). A **1521** (Oracle) não fica exposta na internet.
+- **Docker Compose** sobe dois containers na rede `tobem-net`:
+  - `tobem-api` — API REST em Spring Boot 4 / Java 21 (JWT, CRUD de usuários, idosos, contatos,
+    dispositivos, eventos, alertas e rotinas). Imagem própria (`Dockerfile` na raiz), usuário não-root.
+  - `tobem-oracle` — Oracle Database 23ai Free, com os dados no **volume nomeado** `tobem-oracle-data`.
+- A API fala com o banco pelo nome do serviço: `jdbc:oracle:thin:@//oracle:1521/FREEPDB1`.
+- Quem usa a API: o app do familiar (Dart), a lâmpada (ESP32), o Swagger e os scripts de evidência.
+
+### Estrutura do repositório
+
+```
+.
+├── src/                         código-fonte da API Java (controllers, services, JPA...)
+├── pom.xml                      dependências (inclui o driver Oracle ojdbc11)
+├── Dockerfile                   imagem da aplicação (multi-stage, não-root)
+├── .dockerignore
+├── docker-compose.yml           API + Oracle + rede + volume + healthchecks
+├── .env.example                 variáveis de ambiente (copiar para .env)
+├── scripts/
+│   ├── azure/
+│   │   ├── criar-vm.sh          provisiona tudo com Azure CLI (Bash / Cloud Shell)
+│   │   ├── criar-vm.ps1         o mesmo em PowerShell (Windows)
+│   │   └── excluir-recursos.sh  apaga o grupo de recursos no fim
+│   ├── vm/
+│   │   └── instalar-docker.sh   instala Docker Engine + Compose na VM
+│   ├── popular-usuarios-teste.ps1  usuários de demonstração (uso local)
+│   └── evidencias/
+│       ├── crud.sh              CRUD completo pela API (curl + jq)
+│       ├── select.sql           SELECTs com JOIN nas tabelas
+│       ├── select.sh            roda o select.sql dentro do container Oracle
+│       └── coletar-evidencias.sh containers, logs, usuário, volume, rede...
+└── docs/
+    ├── arquitetura.png / .svg   desenho da arquitetura
+    └── roteiro-video.md         roteiro da gravação
+```
+
+### Tecnologias de infraestrutura
+
+Microsoft Azure (VM, NSG, IP público) · Azure CLI · Ubuntu 22.04 · Docker Engine · Dockerfile ·
+Docker Compose · Java 21 · Spring Boot 4 · Spring Security + JWT · Spring Data JPA ·
+Oracle Database 23ai Free · Swagger/OpenAPI.
+
+---
+
+### How To — do zero à API rodando na nuvem
+
+#### 0. Pré-requisitos
+
+- Conta no Azure (Azure for Students serve).
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) instalado, ou o **Azure Cloud Shell** (Bash) no portal.
+- Git.
+
+#### 1. Clonar este repositório (na sua máquina ou no Cloud Shell)
+
+```bash
+git clone https://github.com/To-Bem/JAVA.git tobem
+cd tobem
+```
+
+#### 2. Criar a VM com Azure CLI
+
+```bash
+az login
+bash scripts/azure/criar-vm.sh
+```
+
+No Windows (PowerShell):
+
+```powershell
+az login
+powershell -ExecutionPolicy Bypass -File .\scripts\azure\criar-vm.ps1
+```
+
+O script executa, nesta ordem, os comandos abaixo (valores padrão entre parênteses):
+
+```bash
+# 1. Grupo de recursos
+az group create --name rg-tobem-gs --location eastus \
+  --tags projeto=tobem disciplina=devops gs=2026-2
+
+# 2. VM Ubuntu 22.04 com chave SSH
+az vm create --resource-group rg-tobem-gs --name vm-tobem \
+  --image Ubuntu2204 --size Standard_B2s --admin-username azureuser \
+  --generate-ssh-keys --public-ip-sku Standard --os-disk-size-gb 64
+
+# 3. Libera a porta da API no NSG (a 22 já vem liberada)
+az vm open-port --resource-group rg-tobem-gs --name vm-tobem --port 8080 --priority 1010
+
+# 4. Instala Docker + Compose dentro da VM
+az vm run-command invoke --resource-group rg-tobem-gs --name vm-tobem \
+  --command-id RunShellScript --scripts @scripts/vm/instalar-docker.sh --parameters azureuser
+
+# 5. Mostra o IP público
+az vm show --resource-group rg-tobem-gs --name vm-tobem --show-details --query publicIps -o tsv
+```
+
+> Para mudar região ou tamanho: `LOCATION=brazilsouth VM_SIZE=Standard_B2ms bash scripts/azure/criar-vm.sh`
+> (no PowerShell: `-Location brazilsouth -VmSize Standard_B2ms`).
+
+#### 3. Entrar na VM e subir os containers
+
+```bash
+ssh azureuser@<IP_DA_VM>
+
+# Conferir o Docker instalado pelo script
+docker --version && docker compose version
+
+git clone https://github.com/To-Bem/JAVA.git tobem
+cd tobem
+cp .env.example .env          # ajuste as senhas se quiser
+docker compose up -d --build  # -d = em background
+```
+
+Na primeira vez, o build da API e a criação do banco Oracle levam de **3 a 6 minutos**.
+A API só sobe depois que o Oracle fica `healthy` (`depends_on: condition: service_healthy`).
+
+```bash
+docker compose ps             # os dois devem ficar "Up (healthy)"
+docker compose logs -f api    # Ctrl+C para sair dos logs
+```
+
+#### 4. Testar a API
+
+```bash
+curl http://localhost:8080/actuator/health        # dentro da VM
+```
+
+No navegador: `http://<IP_DA_VM>:8080/swagger-ui/index.html`
+Login: `POST /api/auth/login` com o administrador do `.env`
+(`admin@tobem.com` / `Admin@12345`) → copie o `token` → botão **Authorize**.
+
+#### 5. CRUD completo (duas tabelas relacionadas ou mais)
+
+```bash
+bash scripts/evidencias/crud.sh
+```
+
+| Etapa | Rota | Tabelas |
+|---|---|---|
+| Create | `POST /api/auth/register` | `usuario` |
+| Create | `POST /api/usuarios/{id}/idoso?parentesco=&ordemEscalonamento=` | `idoso` + `contato` (liga usuário ↔ idoso) |
+| Create | `POST /api/idosos/{id}/dispositivo` | `dispositivo` (FK `idoso_id`) |
+| Read | `GET /api/idosos/{id}/withAll` · `GET /api/idosos?page=0&size=10` | `idoso`, `contato`, `dispositivo`... |
+| Update | `PUT /api/idosos/{id}` | `idoso` |
+| Delete | `DELETE /api/idosos/{id}` | `idoso` (+ `contato`/`dispositivo` em cascata) |
+
+#### 6. SELECT direto no banco
+
+```bash
+bash scripts/evidencias/select.sh
+```
+
+Ou um console SQL interativo dentro do container:
+
+```bash
+docker exec -it tobem-oracle sqlplus tobem/TobemDb2026@//localhost:1521/FREEPDB1
+SQL> SELECT u.nome, c.parentesco, i.nome FROM contato c
+       JOIN usuario u ON u.id = c.usuario_id JOIN idoso i ON i.id = c.idoso_id;
+```
+
+#### 7. Persistência dos dados
+
+```bash
+docker compose down           # remove os containers (o volume fica)
+docker volume ls              # tobem-oracle-data continua lá
+docker compose up -d          # sobe de novo
+bash scripts/evidencias/select.sh   # os mesmos registros continuam no banco
+```
+
+> `docker compose down -v` apagaria o volume e os dados. Não use na demonstração.
+
+#### 8. Evidências técnicas (containers, logs, exec, usuário, diretórios)
+
+```bash
+bash scripts/evidencias/coletar-evidencias.sh | tee evidencias.txt
+```
+
+Comandos avulsos:
+
+```bash
+docker compose ps
+docker compose logs --tail 50 api
+docker compose logs --tail 50 oracle
+docker exec -it tobem-api sh          # acesso ao container (sair: exit)
+docker exec tobem-api whoami          # -> tobem (não-root)
+docker exec tobem-api pwd             # -> /app (WORKDIR)
+docker exec tobem-oracle whoami       # -> oracle
+docker volume inspect tobem-oracle-data
+docker network inspect tobem-net
+```
+
+#### 9. App do familiar (Dart) apontando para a nuvem
+
+No repositório Mobile, na sua máquina:
+
+```powershell
+$env:API_URL = "http://<IP_DA_VM>:8080"
+dart run
+```
+
+#### 10. Apagar tudo no fim (para não gastar crédito)
+
+```bash
+bash scripts/azure/excluir-recursos.sh
+```
+
+---
+
+### Requisitos atendidos
+
+| Requisito | Onde |
+|---|---|
+| VM no Azure criada por Azure CLI, comandos documentados | `scripts/azure/criar-vm.sh` / `.ps1` e passo 2 acima |
+| Docker, Dockerfile e Compose instalados e configurados na VM | `scripts/vm/instalar-docker.sh` (via `az vm run-command`) |
+| App em container, CRUD completo, 2+ tabelas relacionadas | `src/`, `Dockerfile`, `scripts/evidencias/crud.sh` |
+| Usuário não privilegiado | `Dockerfile`: `adduser tobem` (UID 10001) + `USER 10001:10001` |
+| WORKDIR | `Dockerfile`: `WORKDIR /app` |
+| Variáveis de ambiente | `Dockerfile` (`ENV`), `docker-compose.yml` (`environment`), `.env.example` |
+| Porta exposta | `EXPOSE 8080` + `ports: 8080:8080` |
+| Banco em container com volume nomeado, variável e porta | serviço `oracle`: `tobem-oracle-data`, `ORACLE_PASSWORD`/`APP_USER`, `1521` |
+| Compose com app, banco, network, volume, portas, variáveis e dependência | `docker-compose.yml` (`tobem-net`, `tobem-oracle-data`, `depends_on: service_healthy`) |
+| Execução em background | `docker compose up -d`, `restart: unless-stopped` |
+| Logs, acesso aos containers, usuário, diretórios | `scripts/evidencias/coletar-evidencias.sh` e passo 8 |
+| Persistência e SELECT no banco | passos 6 e 7, `scripts/evidencias/select.sql` |
+
+### Variáveis de ambiente (`.env`)
+
+| Variável | Usada por | Para quê |
+|---|---|---|
+| `ORACLE_PASSWORD` | oracle | Senha de SYS/SYSTEM |
+| `DB_USER` / `DB_PASSWORD` | oracle e api | Esquema da aplicação (criado no 1º start) e login da API no banco |
+| `DB_PORT` | oracle | Porta publicada na VM (padrão 1521) |
+| `API_PORT` | api | Porta publicada na VM (padrão 8080) |
+| `JWT_SECRET` | api | Chave Base64 (≥ 32 bytes) que assina os tokens. Gere com `openssl rand -base64 32` |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | api | Primeiro administrador, criado na subida |
+| `JPA_SHOW_SQL` | api | Mostra os SQL nos logs (`true`/`false`) |
+
+O `.env` não vai para o GitHub (`.gitignore`). Sem as variáveis de banco, a API usa H2 local
+(veja [Como executar](#como-executar-local-sem-docker)).
+
+### Problemas comuns
+
+| Sintoma | Solução |
+|---|---|
+| `RequestDisallowedByPolicy` / região não permitida (Azure for Students) | Troque a região: `LOCATION=brazilsouth` ou `westus2`... Veja as permitidas em *Policy* no portal |
+| `SkuNotAvailable` | Troque o tamanho: `VM_SIZE=Standard_B2ms` ou `Standard_D2s_v3` |
+| `permission denied` no docker | Saia e entre de novo no SSH (o grupo `docker` vale a partir do novo login) |
+| `tobem-api` reiniciando no começo | Normal na 1ª subida enquanto o Oracle cria o esquema; aguarde e veja `docker compose logs api` |
+| `$'\r': command not found` nos scripts | O arquivo foi salvo com quebra de linha do Windows. O `.gitattributes` força LF; clone de novo ou rode `sed -i 's/\r$//' scripts/*/*.sh` |
+| Swagger não abre de fora | Confira se a porta 8080 foi liberada (`az vm open-port`) e se `docker compose ps` mostra `0.0.0.0:8080->8080` |
+
+---
 
 ## Tecnologias
 
-Java 21, Maven, Spring Boot 4.1.2, Spring Web MVC, Spring Data JPA, H2, Bean Validation, Spring Security, JWT/JJWT, Spring Boot Actuator e Springdoc OpenAPI. O banco local é H2 em arquivo; os testes usam H2 em memória.
+Java 21, Maven, Spring Boot 4.1.2, Spring Web MVC, Spring Data JPA, H2, Oracle (driver ojdbc11), Bean Validation, Spring Security, JWT/JJWT, Spring Boot Actuator e Springdoc OpenAPI. O banco local é H2 em arquivo; os testes usam H2 em memória. No Docker Compose a API usa Oracle Database 23ai Free, escolhido pelas variáveis `DB_URL`, `DB_USERNAME` e `DB_PASSWORD` (sem elas, vale o H2).
 
-## Como executar
+## Como executar (local, sem Docker)
 
 Requisitos: JDK 21 e Maven 3.9+. Execute os comandos na raiz deste repositório. A primeira execução precisa de acesso à internet para baixar dependências.
 
@@ -222,6 +492,4 @@ Os testes usam banco em memória e credenciais fictícias próprias. Não depend
 
 ## Uso de IA
 
-Foi utilizado ChatGPT/Codex para revisão de código, explicação de erros, implementação assistida de filtros, notificações, segurança e testes, além de documentação e conferência dos requisitos. 
-
-
+Foi utilizado ChatGPT/Codex para revisão de código, explicação de erros, implementação assistida de filtros, notificações, segurança e testes, além de documentação e conferência dos requisitos.

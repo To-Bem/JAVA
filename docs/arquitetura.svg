@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1010" width="1600" height="1010" font-family="DejaVu Sans, Arial, sans-serif">
+  <defs>
+    <marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <marker id="setaAzul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0b6bcb"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="1010" fill="#ffffff"/>
+
+  <!-- Título -->
+  <text x="30" y="45" font-size="28" font-weight="bold" fill="#0f172a">Tô Bem — Arquitetura macro da solução</text>
+  <text x="30" y="72" font-size="15" fill="#475569">Global Solution 2026/2 · CitizenTech · DevOps Tools &amp; Cloud Computing — monitoramento de idosos que moram sozinhos, sem câmeras</text>
+
+  <!-- ===== Coluna da esquerda: quem acessa ===== -->
+  <text x="30" y="125" font-size="15" font-weight="bold" fill="#334155">QUEM ACESSA</text>
+
+  <rect x="30" y="140" width="300" height="115" rx="10" fill="#f0f9ff" stroke="#0369a1" stroke-width="2"/>
+  <text x="45" y="168" font-size="16" font-weight="bold" fill="#0c4a6e">Familiar / cuidador</text>
+  <text x="45" y="192" font-size="13" fill="#0f172a">App Tô Bem em Dart (terminal)</text>
+  <text x="45" y="212" font-size="13" fill="#0f172a">login JWT, idosos, alertas,</text>
+  <text x="45" y="232" font-size="13" fill="#0f172a">monitoramento ao vivo</text>
+
+  <rect x="30" y="285" width="300" height="115" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+  <text x="45" y="313" font-size="16" font-weight="bold" fill="#7c2d12">Lâmpada Tô Bem (IoT)</text>
+  <text x="45" y="337" font-size="13" fill="#0f172a">ESP32 + radar mmWave</text>
+  <text x="45" y="357" font-size="13" fill="#0f172a">envia eventos: movimento,</text>
+  <text x="45" y="377" font-size="13" fill="#0f172a">queda, inatividade, temperatura</text>
+
+  <rect x="30" y="430" width="300" height="115" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+  <text x="45" y="458" font-size="16" font-weight="bold" fill="#1e293b">Equipe / professor</text>
+  <text x="45" y="482" font-size="13" fill="#0f172a">Swagger UI no navegador</text>
+  <text x="45" y="502" font-size="13" fill="#0f172a">scripts de CRUD (curl)</text>
+  <text x="45" y="522" font-size="13" fill="#0f172a">GET/POST/PUT/DELETE /api/...</text>
+
+  <rect x="30" y="600" width="300" height="115" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+  <text x="45" y="628" font-size="16" font-weight="bold" fill="#1e293b">Administração (DevOps)</text>
+  <text x="45" y="652" font-size="13" fill="#0f172a">Azure CLI (az) para criar a VM</text>
+  <text x="45" y="672" font-size="13" fill="#0f172a">SSH para docker compose,</text>
+  <text x="45" y="692" font-size="13" fill="#0f172a">logs, exec e SELECT</text>
+
+  <!-- Provisionamento -->
+  <rect x="30" y="745" width="300" height="230" rx="10" fill="#ecfdf5" stroke="#047857" stroke-width="2"/>
+  <text x="45" y="773" font-size="16" font-weight="bold" fill="#064e3b">Provisionamento</text>
+  <text x="45" y="800" font-size="13" fill="#0f172a">1. az group create</text>
+  <text x="45" y="822" font-size="13" fill="#0f172a">2. az vm create (Ubuntu 22.04)</text>
+  <text x="45" y="844" font-size="13" fill="#0f172a">3. az vm open-port 8080</text>
+  <text x="45" y="866" font-size="13" fill="#0f172a">4. az vm run-command:</text>
+  <text x="62" y="886" font-size="13" fill="#0f172a">instalar Docker + Compose</text>
+  <text x="45" y="908" font-size="13" fill="#0f172a">5. git clone (GitHub)</text>
+  <text x="45" y="930" font-size="13" fill="#0f172a">6. docker compose up -d --build</text>
+  <text x="45" y="958" font-size="12" fill="#047857">scripts/azure · scripts/vm</text>
+
+  <!-- ===== Azure ===== -->
+  <rect x="380" y="100" width="1195" height="880" rx="14" fill="#f5f9ff" stroke="#0b6bcb" stroke-width="2.5"/>
+  <text x="400" y="130" font-size="18" font-weight="bold" fill="#0b6bcb">Microsoft Azure</text>
+  <text x="585" y="130" font-size="14" fill="#1e3a8a">grupo de recursos rg-tobem-gs · região eastus</text>
+
+  <!-- NSG -->
+  <rect x="395" y="150" width="34" height="810" rx="6" fill="#dbeafe" stroke="#0b6bcb" stroke-width="1.5"/>
+  <text transform="translate(418,420) rotate(-90)" font-size="14" font-weight="bold" fill="#1e3a8a" text-anchor="middle">NSG (firewall) · abertas: 22 e 8080</text>
+  <text transform="translate(418,830) rotate(-90)" font-size="12" fill="#1e3a8a" text-anchor="middle">1521 fechada</text>
+
+  <!-- VM -->
+  <rect x="450" y="150" width="1105" height="810" rx="12" fill="#ffffff" stroke="#1e3a8a" stroke-width="2"/>
+  <text x="470" y="180" font-size="17" font-weight="bold" fill="#1e3a8a">VM vm-tobem</text>
+  <text x="625" y="180" font-size="14" fill="#334155">Ubuntu Server 22.04 LTS · Standard_B2s (2 vCPU, 4 GB) · IP público · disco 64 GB</text>
+
+  <!-- Docker -->
+  <rect x="470" y="200" width="1065" height="740" rx="10" fill="#f8fafc" stroke="#2496ed" stroke-width="2"/>
+  <text x="490" y="228" font-size="16" font-weight="bold" fill="#0369a1">Docker Engine + Docker Compose</text>
+  <text x="815" y="228" font-size="13" fill="#334155">docker-compose.yml · containers em background (-d) · restart: unless-stopped</text>
+
+  <!-- Rede -->
+  <rect x="490" y="250" width="1025" height="390" rx="10" fill="#ffffff" stroke="#64748b" stroke-width="1.5" stroke-dasharray="8 6"/>
+  <text x="510" y="276" font-size="14" font-weight="bold" fill="#475569">rede tobem-net (bridge)</text>
+
+  <!-- Container API -->
+  <rect x="515" y="295" width="430" height="320" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="535" y="325" font-size="17" font-weight="bold" fill="#1e3a8a">container tobem-api</text>
+  <text x="535" y="352" font-size="14" fill="#0f172a">API REST Tô Bem · Spring Boot 4 · Java 21</text>
+  <text x="535" y="376" font-size="13" fill="#0f172a">JWT · perfis ADMIN / MANAGER / MEMBER</text>
+  <text x="535" y="400" font-size="13" fill="#0f172a">CRUD: usuários, idosos, contatos,</text>
+  <text x="535" y="420" font-size="13" fill="#0f172a">dispositivos, eventos, alertas, rotinas</text>
+  <line x1="535" y1="438" x2="925" y2="438" stroke="#bfdbfe"/>
+  <text x="535" y="462" font-size="13" fill="#334155">imagem tobem-api:1.0 (Dockerfile multi-stage)</text>
+  <text x="535" y="484" font-size="13" fill="#334155">eclipse-temurin:21-jre-alpine</text>
+  <text x="535" y="506" font-size="13" fill="#334155">usuário tobem (UID 10001, não-root)</text>
+  <text x="535" y="528" font-size="13" fill="#334155">WORKDIR /app · EXPOSE 8080 · HEALTHCHECK</text>
+  <text x="535" y="550" font-size="13" fill="#334155">ENV: DB_URL, DB_USERNAME, DB_PASSWORD,</text>
+  <text x="535" y="570" font-size="13" fill="#334155">JWT_SECRET, ADMIN_EMAIL, SERVER_PORT</text>
+  <rect x="845" y="580" width="85" height="26" rx="5" fill="#1d4ed8"/>
+  <text x="887" y="598" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">:8080</text>
+
+  <!-- Container Oracle -->
+  <rect x="1075" y="295" width="420" height="320" rx="10" fill="#fef2f2" stroke="#b91c1c" stroke-width="2"/>
+  <text x="1095" y="325" font-size="17" font-weight="bold" fill="#7f1d1d">container tobem-oracle</text>
+  <text x="1095" y="352" font-size="14" fill="#0f172a">Oracle Database 23ai Free</text>
+  <text x="1095" y="376" font-size="13" fill="#0f172a">imagem gvenzl/oracle-free:23-slim</text>
+  <line x1="1095" y1="394" x2="1475" y2="394" stroke="#fecaca"/>
+  <text x="1095" y="418" font-size="13" fill="#334155">serviço FREEPDB1 · esquema TOBEM</text>
+  <text x="1095" y="440" font-size="13" fill="#334155">ENV: ORACLE_PASSWORD, APP_USER,</text>
+  <text x="1095" y="460" font-size="13" fill="#334155">APP_USER_PASSWORD</text>
+  <text x="1095" y="482" font-size="13" fill="#334155">usuário oracle (não-root)</text>
+  <text x="1095" y="504" font-size="13" fill="#334155">HEALTHCHECK: healthcheck.sh</text>
+  <text x="1095" y="526" font-size="13" fill="#334155">tabelas criadas pela API (JPA)</text>
+  <text x="1095" y="548" font-size="13" fill="#334155">SELECT via docker exec ... sqlplus</text>
+  <rect x="1395" y="580" width="85" height="26" rx="5" fill="#b91c1c"/>
+  <text x="1437" y="598" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">:1521</text>
+
+  <!-- API -> Oracle -->
+  <line x1="945" y1="455" x2="1072" y2="455" stroke="#334155" stroke-width="2.5" marker-end="url(#seta)"/>
+  <text x="1008" y="440" font-size="13" font-weight="bold" fill="#334155" text-anchor="middle">JDBC</text>
+  <text x="1008" y="478" font-size="11" fill="#334155" text-anchor="middle">oracle:1521</text>
+  <text x="1008" y="494" font-size="11" fill="#334155" text-anchor="middle">/FREEPDB1</text>
+  <text x="1008" y="530" font-size="11" fill="#64748b" text-anchor="middle">depends_on:</text>
+  <text x="1008" y="546" font-size="11" fill="#64748b" text-anchor="middle">service_healthy</text>
+
+  <!-- Volume -->
+  <path d="M1140,700 a145,22 0 0,0 290,0 v110 a145,22 0 0,1 -290,0 z" fill="#fefce8" stroke="#a16207" stroke-width="2"/>
+  <ellipse cx="1285" cy="700" rx="145" ry="22" fill="#fef9c3" stroke="#a16207" stroke-width="2"/>
+  <text x="1285" y="755" font-size="15" font-weight="bold" fill="#713f12" text-anchor="middle">volume nomeado</text>
+  <text x="1285" y="777" font-size="14" fill="#713f12" text-anchor="middle">tobem-oracle-data</text>
+  <text x="1285" y="799" font-size="12" fill="#713f12" text-anchor="middle">→ /opt/oracle/oradata</text>
+  <line x1="1285" y1="615" x2="1285" y2="672" stroke="#a16207" stroke-width="2.5" marker-end="url(#seta)"/>
+  <text x="1295" y="652" font-size="12" fill="#713f12">persistência</text>
+  <text x="1150" y="860" font-size="12" fill="#713f12">os dados continuam após</text>
+  <text x="1150" y="877" font-size="12" fill="#713f12">docker compose down / up</text>
+
+  <!-- Tabelas -->
+  <rect x="515" y="665" width="580" height="250" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="535" y="693" font-size="15" font-weight="bold" fill="#1e293b">Esquema TOBEM — tabelas relacionadas</text>
+  <g font-size="13" fill="#0f172a">
+    <rect x="535" y="712" width="110" height="34" rx="6" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="590" y="734" text-anchor="middle">usuario</text>
+    <rect x="705" y="712" width="110" height="34" rx="6" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="760" y="734" text-anchor="middle">contato</text>
+    <rect x="875" y="712" width="110" height="34" rx="6" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="930" y="734" text-anchor="middle">idoso</text>
+    <rect x="875" y="790" width="110" height="34" rx="6" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="930" y="812" text-anchor="middle">dispositivo</text>
+    <rect x="705" y="790" width="110" height="34" rx="6" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="760" y="812" text-anchor="middle">evento</text>
+    <rect x="535" y="790" width="110" height="34" rx="6" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="590" y="812" text-anchor="middle">alerta</text>
+    <rect x="985" y="852" width="90" height="34" rx="6" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="1030" y="874" text-anchor="middle">rotina</text>
+  </g>
+  <g stroke="#6366f1" stroke-width="1.5" fill="none">
+    <line x1="645" y1="729" x2="705" y2="729"/>
+    <line x1="815" y1="729" x2="875" y2="729"/>
+    <line x1="930" y1="746" x2="930" y2="790"/>
+    <line x1="875" y1="807" x2="815" y2="807"/>
+    <line x1="705" y1="807" x2="645" y2="807"/>
+    <line x1="960" y1="746" x2="1030" y2="852"/>
+    <line x1="590" y1="746" x2="590" y2="790"/>
+  </g>
+  <g font-size="11" fill="#4338ca">
+    <text x="650" y="723">1</text><text x="692" y="723">N</text>
+    <text x="820" y="723">N</text><text x="862" y="723">1</text>
+    <text x="936" y="762">1</text><text x="936" y="784">N</text>
+    <text x="862" y="801">1</text><text x="820" y="801">N</text>
+    <text x="692" y="801">1</text><text x="650" y="801">N</text>
+    <text x="596" y="762">1</text><text x="596" y="784">N</text>
+    <text x="980" y="770">1</text><text x="1014" y="846">N</text>
+  </g>
+  <text x="535" y="860" font-size="12" fill="#475569">usuario N:N idoso (via contato = ordem de aviso)</text>
+  <text x="535" y="878" font-size="12" fill="#475569">idoso 1:N dispositivo 1:N evento 1:N alerta</text>
+  <text x="535" y="896" font-size="12" fill="#475569">alerta → usuario avisado · idoso 1:N rotina</text>
+
+  <!-- Setas dos clientes para a API -->
+  <g stroke="#0b6bcb" stroke-width="2.5" fill="none" marker-end="url(#setaAzul)">
+    <path d="M330,197 C440,197 440,400 512,400"/>
+    <path d="M330,342 C430,342 430,455 512,455"/>
+    <path d="M330,487 C430,487 430,510 512,510"/>
+  </g>
+  <rect x="342" y="560" width="120" height="24" rx="5" fill="#ffffff" stroke="#0b6bcb"/>
+  <text x="402" y="577" font-size="13" font-weight="bold" fill="#0b6bcb" text-anchor="middle">HTTP :8080</text>
+
+  <!-- SSH -->
+  <path d="M330,657 L466,657" stroke="#334155" stroke-width="2.5" fill="none" stroke-dasharray="7 5" marker-end="url(#seta)"/>
+  <rect x="345" y="664" width="90" height="22" rx="5" fill="#ffffff" stroke="#334155"/>
+  <text x="390" y="680" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">SSH :22</text>
+</svg>

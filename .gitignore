@@ -22,3 +22,16 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Build, banco H2 local e IDE
+target/
+data/
+.idea/
+.vscode/
+*.iml
+
+# Segredos do Docker Compose: nunca versionar o .env (use o .env.example)
+.env
+
+# Evidências geradas na VM
+evidencias.txt
