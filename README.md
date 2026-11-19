@@ -7,7 +7,7 @@ API REST para monitoramento de idosos por dispositivos, registro de rotinas e ev
 - Matheus Guimarães Rosa — rm567912.
 - Lucas Shida Rodrigues da Costa — rm568194.
 - Pedro Henrique Pinheiro Falchi — rm566967
-- Pitch: **inserir link público do vídeo de até 5 minutos**.
+- Pitch: https://youtu.be/0WKPke2kXSo
 - Vídeo DevOps (YouTube, não listado, 720p+): https://youtu.be/Rgj6laBnc7Q
 - Repositório: https://github.com/To-Bem/JAVA
 
