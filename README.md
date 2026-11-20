@@ -231,11 +231,15 @@ $env:API_URL = "http://<IP_DA_VM>:8080"
 dart run
 ```
 
-#### 10. Apagar tudo no fim (para não gastar crédito)
+#### 10. Lâmpada IoT enviando eventos para a API na nuvem
 
-```bash
-bash scripts/azure/excluir-recursos.sh
-```
+Teste real em 19/11/2026: a lâmpada com radar mmWave (ESP32, dispositivo 41) envia os eventos pela rede local para a ponte no PC, que repassa para esta API na VM do Azure. Os eventos ficam gravados no Oracle (#69 a #77) e aparecem no app do familiar. Endereços IP ocultados.
+
+![Comunicação de ponta a ponta: ESP32, ponte na rede local e API Java no Azure](docs/evidencias/comunicacao-ponta-a-ponta.png)
+
+Como rodar a ponte e o firmware: [repositório IoT, seção 5.3](https://github.com/To-Bem/IoT#53-lâmpada--api-java--app-da-família).
+
+#### 11. Apagar tudo no fim (para não gastar crédito)
 
 ---
 
